@@ -46,10 +46,10 @@ const About = () => {
                             </div>
                             <div className="space-y-4">
                                 <div className="h-48 rounded-3xl overflow-hidden shadow-lg border-2 border-secondary/10">
-                                    <img src="https://images.unsplash.com/photo-1597333306122-7a8a54129653?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover" alt="Flower" />
+                                    <img src="https://images.unsplash.com/photo-1464454709131-ffd692591ee5?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover" alt="Strawberries" />
                                 </div>
                                 <div className="h-64 rounded-3xl overflow-hidden shadow-lg border-2 border-primary/10">
-                                    <img src="https://images.unsplash.com/photo-1558905734-b830c443ed29?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover" alt="Nature" />
+                                    <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover" alt="Nature" />
                                 </div>
                             </div>
                         </div>
