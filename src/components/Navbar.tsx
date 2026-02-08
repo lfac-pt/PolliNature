@@ -24,6 +24,7 @@ const Navbar = () => {
                     <div className="hidden md:flex items-center gap-8">
                         <Link to="/" className="text-slate-600 hover:text-primary font-medium transition-colors">Início</Link>
                         <Link to="/explore" className="text-slate-600 hover:text-primary font-medium transition-colors">Explorar</Link>
+                        {user && <Link to="/admin" className="text-slate-600 hover:text-primary font-medium transition-colors">Validar</Link>}
                         <Link to="/about" className="text-slate-600 hover:text-primary font-medium transition-colors">Sobre o Projeto</Link>
                     </div>
 

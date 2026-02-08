@@ -6,6 +6,7 @@ import MapPage from './pages/MapPage';
 import About from './pages/About';
 import Explore from './pages/Explore';
 import AuthPage from './pages/AuthPage';
+import AdminPage from './pages/AdminPage';
 import { AuthProvider } from './lib/AuthContext';
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
               <Route path="/about" element={<About />} />
               <Route path="/login" element={<AuthPage />} />
               <Route path="/register" element={<AuthPage />} />
+              <Route path="/admin" element={<AdminPage />} />
             </Routes>
           </main>
 
