@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Popup } from 'react-leaflet';
 import { supabase } from '../lib/supabase';
-import { Leaf, Info, MapPin, Ruler } from 'lucide-react';
+import { Leaf, Info, MapPin, Ruler, User, ExternalLink } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
 const SITE_COLORS: Record<string, string> = {
@@ -112,10 +112,16 @@ const Explore = () => {
                                             <Ruler size={14} className="text-secondary" />
                                             <span className="text-xs font-bold">{site.area_sqm?.toFixed(2)} m²</span>
                                         </div>
+                                        {site.show_author && site.author_name && (
+                                            <div className="flex items-center gap-2 text-slate-600 border-t pt-2 mt-2">
+                                                <User size={14} className="text-slate-400" />
+                                                <span className="text-xs italic">Criado por {site.author_name}</span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {site.actions_taken && site.actions_taken.length > 0 && (
-                                        <div className="space-y-2">
+                                        <div className="space-y-2 mb-4">
                                             <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Ações Realizadas</p>
                                             <div className="flex flex-wrap gap-1">
                                                 {site.actions_taken.map((action: string) => (
@@ -125,6 +131,18 @@ const Explore = () => {
                                                 ))}
                                             </div>
                                         </div>
+                                    )}
+
+                                    {site.website_url && (
+                                        <a
+                                            href={site.website_url.startsWith('http') ? site.website_url : `https://${site.website_url}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 text-[11px] font-bold text-primary hover:underline mt-2"
+                                        >
+                                            <ExternalLink size={12} />
+                                            Visitar Website
+                                        </a>
                                     )}
                                 </div>
                             </Popup>

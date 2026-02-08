@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Check, X, Clock, MapPin, Ruler, ExternalLink } from 'lucide-react';
+import { Check, X, Clock, MapPin, Ruler, ExternalLink, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AdminPage = () => {
@@ -64,6 +64,12 @@ const AdminPage = () => {
                                 <span className="flex items-center gap-1.5"><MapPin size={14} /> {site.site_type}</span>
                                 <span className="flex items-center gap-1.5"><Ruler size={14} /> {site.area_sqm.toFixed(2)} m²</span>
                                 <span className="flex items-center gap-1.5"><Clock size={14} /> {new Date(site.created_at).toLocaleDateString()}</span>
+                                {site.author_name && <span className="flex items-center gap-1.5"><User size={14} /> {site.author_name} {site.show_author ? '(Público)' : '(Privado)'}</span>}
+                                {site.website_url && (
+                                    <a href={site.website_url} target="_blank" className="flex items-center gap-1.5 text-primary hover:underline">
+                                        <ExternalLink size={14} /> Website
+                                    </a>
+                                )}
                             </div>
 
                             {site.actions_taken && site.actions_taken.length > 0 && (

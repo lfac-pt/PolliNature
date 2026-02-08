@@ -9,6 +9,9 @@ const MapPage = () => {
     const [polygon, setPolygon] = useState<any>(null);
     const [siteType, setSiteType] = useState('garden');
     const [name, setName] = useState('');
+    const [authorName, setAuthorName] = useState('');
+    const [showAuthor, setShowAuthor] = useState(false);
+    const [websiteUrl, setWebsiteUrl] = useState('');
     const [selectedActions, setSelectedActions] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -52,6 +55,9 @@ const MapPage = () => {
             location: polygon.geometry,
             area_sqm: area,
             actions_taken: selectedActions,
+            author_name: authorName,
+            show_author: showAuthor,
+            website_url: websiteUrl,
             user_id: user?.id,
             status: 'pending'
         });
@@ -108,6 +114,41 @@ const MapPage = () => {
                             placeholder="Ex: O meu jardim secreto"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">Ação Realizada por (Nome/Entidade)</label>
+                        <input
+                            type="text"
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                            placeholder="Ex: Nome do morador ou associação"
+                            value={authorName}
+                            onChange={(e) => setAuthorName(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                        <input
+                            type="checkbox"
+                            id="showAuthor"
+                            className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
+                            checked={showAuthor}
+                            onChange={(e) => setShowAuthor(e.target.checked)}
+                        />
+                        <label htmlFor="showAuthor" className="text-sm text-slate-600 cursor-pointer select-none">
+                            Mostrar nome no mapa público
+                        </label>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">Website / Redes Sociais</label>
+                        <input
+                            type="url"
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                            placeholder="https://exemplo.pt"
+                            value={websiteUrl}
+                            onChange={(e) => setWebsiteUrl(e.target.value)}
                         />
                     </div>
 
