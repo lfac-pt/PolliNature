@@ -122,6 +122,7 @@ const MapPage = () => {
                             <option value="park">Parque / Espaço Público</option>
                             <option value="backyard">Quintal / Horta</option>
                             <option value="school">Escola</option>
+                            <option value="planters">Floreiras Públicas</option>
                             <option value="other">Outro</option>
                         </select>
                     </div>

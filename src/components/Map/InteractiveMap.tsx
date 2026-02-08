@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
@@ -29,6 +29,7 @@ const SITE_COLORS: Record<string, string> = {
     park: '#3b82f6',   // blue
     backyard: '#f59e0b', // amber
     school: '#a855f7', // purple
+    planters: '#ec4899', // pink
     other: '#64748b'   // slate
 };
 

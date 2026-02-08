@@ -8,8 +8,9 @@ const SITE_COLORS: Record<string, string> = {
     garden: '#10b981',
     park: '#3b82f6',
     backyard: '#f59e0b',
-    school: '#a855f7',
-    other: '#64748b'
+    school: '#a855f7', // purple
+    planters: '#ec4899', // pink
+    other: '#64748b'   // slate
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -72,6 +73,7 @@ const Explore = () => {
                     <LegendItem color={SITE_COLORS.park} label="Parques" />
                     <LegendItem color={SITE_COLORS.backyard} label="Quintais" />
                     <LegendItem color={SITE_COLORS.school} label="Escolas" />
+                    <LegendItem color={SITE_COLORS.planters} label="Floreiras Públicas" />
                     <LegendItem color={SITE_COLORS.other} label="Outros" />
                 </div>
             </div>
