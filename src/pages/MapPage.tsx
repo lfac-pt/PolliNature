@@ -9,10 +9,30 @@ const MapPage = () => {
     const [polygon, setPolygon] = useState<any>(null);
     const [siteType, setSiteType] = useState('garden');
     const [name, setName] = useState('');
+    const [selectedActions, setSelectedActions] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
     const navigate = useNavigate();
+
+    const ACTIONS = [
+        { id: 'habitats', label: 'Proteger habitats existentes' },
+        { id: 'mowing', label: 'Reduzir frequência de corte' },
+        { id: 'planting', label: 'Plantação amiga de polinizadores' },
+        { id: 'control', label: 'Controlo de plantas invasoras' },
+        { id: 'nesting', label: 'Criar locais de nidificação' },
+        { id: 'pesticides', label: 'Reduzir uso de pesticidas' },
+        { id: 'awareness', label: 'Sensibilização' },
+        { id: 'tracking', label: 'Monitorização' },
+        { id: 'bio_general', label: 'Biodiversidade geral' },
+        { id: 'other', label: 'Outro' },
+    ];
+
+    const handleActionToggle = (id: string) => {
+        setSelectedActions(prev =>
+            prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
+        );
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,14 +44,16 @@ const MapPage = () => {
         setIsSubmitting(true);
 
         // In a real app, we'd get the user ID from Supabase Auth
-        // const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user } } = await supabase.auth.getUser();
 
         const { error } = await supabase.from('sites').insert({
             name,
             site_type: siteType,
             location: polygon.geometry,
             area_sqm: area,
-            status: 'pending' // Default status for validation
+            actions_taken: selectedActions,
+            user_id: user?.id,
+            status: 'pending'
         });
 
         setIsSubmitting(false);
@@ -102,6 +124,25 @@ const MapPage = () => {
                             <option value="school">Escola</option>
                             <option value="other">Outro</option>
                         </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-3">Ações Realizadas</label>
+                        <div className="space-y-2 max-h-48 overflow-y-auto pr-2 overflow-x-hidden">
+                            {ACTIONS.map(action => (
+                                <label key={action.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors group">
+                                    <input
+                                        type="checkbox"
+                                        className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary transition-all cursor-pointer"
+                                        checked={selectedActions.includes(action.id)}
+                                        onChange={() => handleActionToggle(action.id)}
+                                    />
+                                    <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors leading-tight">
+                                        {action.label}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
                     </div>
 
                     <div className="p-4 bg-slate-50 rounded-2xl space-y-3">

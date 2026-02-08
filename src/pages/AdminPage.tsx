@@ -65,6 +65,16 @@ const AdminPage = () => {
                                 <span className="flex items-center gap-1.5"><Ruler size={14} /> {site.area_sqm.toFixed(2)} m²</span>
                                 <span className="flex items-center gap-1.5"><Clock size={14} /> {new Date(site.created_at).toLocaleDateString()}</span>
                             </div>
+
+                            {site.actions_taken && site.actions_taken.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-4">
+                                    {site.actions_taken.map((action: string) => (
+                                        <span key={action} className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold uppercase tracking-tight">
+                                            {action}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex gap-3">
