@@ -46,10 +46,13 @@ const MapController = ({ onAreaChange, onPolygonChange, siteType }: InteractiveM
             drawMarker: false,
             drawCircleMarker: false,
             drawPolyline: false,
-            drawRectangle: true,
+            drawRectangle: false,
+            drawText: false,
             drawPolygon: true,
             editMode: true,
             dragMode: true,
+            cutMode: false,
+            rotateMode: false,
             removalMode: true,
         });
 

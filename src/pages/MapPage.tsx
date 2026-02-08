@@ -218,7 +218,7 @@ const MapPage = () => {
             </div>
 
             {/* Map Area */}
-            <div className="flex-1 relative bg-slate-100">
+            <div className={`flex-1 relative bg-slate-100 ${!polygon ? 'map-draw-mode' : ''}`}>
                 <InteractiveMap
                     onAreaChange={setArea}
                     onPolygonChange={setPolygon}
@@ -232,6 +232,7 @@ const MapPage = () => {
                         <span className="text-sm font-medium">Coimbra, Portugal</span>
                     </div>
                 </div>
+
             </div>
         </div>
     );

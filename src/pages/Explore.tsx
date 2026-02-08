@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, Popup, CircleMarker, useMapEvents } from 'react-leaflet';
+import * as turf from '@turf/turf';
 import { supabase } from '../lib/supabase';
 import { Leaf, Info, MapPin, Ruler, User, ExternalLink } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
@@ -38,7 +39,20 @@ const Explore = () => {
                 .eq('status', 'approved');
 
             if (data) {
-                setSites(data);
+                // Pre-calculate centers for better performance
+                const sitesWithCenters = data.map(site => {
+                    try {
+                        const center = turf.center(site.location);
+                        return {
+                            ...site,
+                            center: [center.geometry.coordinates[1], center.geometry.coordinates[0]] // [lat, lng]
+                        };
+                    } catch (e) {
+                        return site;
+                    }
+                });
+
+                setSites(sitesWithCenters);
                 const total = data.reduce((acc, site) => acc + (site.area_sqm || 0), 0);
                 setStats({ totalArea: total, count: data.length });
             }
@@ -58,7 +72,7 @@ const Explore = () => {
                 />
                 <StatsCard
                     label="Área Recuperada"
-                    value={`${stats.totalArea.toLocaleString()} m²`}
+                    value={`${Math.round(stats.totalArea).toLocaleString()} m²`}
                     icon={<Leaf size={20} className="text-secondary" />}
                 />
             </div>
@@ -88,9 +102,45 @@ const Explore = () => {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {sites.map(site => (
+                    <MapContent sites={sites} />
+                </MapContainer>
+            </div>
+        </div>
+    );
+};
+
+// Component to handle zoom events and rendering switch
+const MapContent = ({ sites }: { sites: any[] }) => {
+    const [zoom, setZoom] = useState(13);
+
+    useMapEvents({
+        zoomend: (e) => {
+            setZoom(e.target.getZoom());
+        }
+    });
+
+    const isZoomedOut = zoom < 16; // Threshold for switching to dots
+
+    return (
+        <>
+            {sites.map(site => (
+                <div key={site.id}>
+                    {isZoomedOut && site.center ? (
+                        <CircleMarker
+                            center={site.center}
+                            pathOptions={{
+                                color: SITE_COLORS[site.site_type] || '#ccc',
+                                fillColor: SITE_COLORS[site.site_type] || '#ccc',
+                                fillOpacity: 0.8
+                            }}
+                            radius={8}
+                        >
+                            <Popup>
+                                <SitePopupContent site={site} />
+                            </Popup>
+                        </CircleMarker>
+                    ) : (
                         <GeoJSON
-                            key={site.id}
                             data={site.location}
                             style={{
                                 color: SITE_COLORS[site.site_type] || '#ccc',
@@ -100,59 +150,63 @@ const Explore = () => {
                             }}
                         >
                             <Popup>
-                                <div className="p-1 min-w-[200px]">
-                                    <h3 className="text-lg font-bold text-slate-900 mb-2 border-b pb-2">{site.name || 'Sem nome'}</h3>
-
-                                    <div className="space-y-2 mb-4">
-                                        <div className="flex items-center gap-2 text-slate-600">
-                                            <MapPin size={14} className="text-primary" />
-                                            <span className="text-xs font-medium uppercase tracking-wide">{site.site_type}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-slate-600">
-                                            <Ruler size={14} className="text-secondary" />
-                                            <span className="text-xs font-bold">{site.area_sqm?.toFixed(2)} m²</span>
-                                        </div>
-                                        {site.show_author && site.author_name && (
-                                            <div className="flex items-center gap-2 text-slate-600 border-t pt-2 mt-2">
-                                                <User size={14} className="text-slate-400" />
-                                                <span className="text-xs italic">Criado por {site.author_name}</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {site.actions_taken && site.actions_taken.length > 0 && (
-                                        <div className="space-y-2 mb-4">
-                                            <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Ações Realizadas</p>
-                                            <div className="flex flex-wrap gap-1">
-                                                {site.actions_taken.map((action: string) => (
-                                                    <span key={action} className="px-1.5 py-0.5 bg-nature-50 text-primary-dark rounded text-[10px] font-medium border border-nature-100">
-                                                        {ACTION_LABELS[action] || action}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {site.website_url && (
-                                        <a
-                                            href={site.website_url.startsWith('http') ? site.website_url : `https://${site.website_url}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1.5 text-[11px] font-bold text-primary hover:underline mt-2"
-                                        >
-                                            <ExternalLink size={12} />
-                                            Visitar Website
-                                        </a>
-                                    )}
-                                </div>
+                                <SitePopupContent site={site} />
                             </Popup>
                         </GeoJSON>
-                    ))}
-                </MapContainer>
-            </div>
-        </div>
+                    )}
+                </div>
+            ))}
+        </>
     );
 };
+
+const SitePopupContent = ({ site }: { site: any }) => (
+    <div className="p-1 min-w-[200px]">
+        <h3 className="text-lg font-bold text-slate-900 mb-2 border-b pb-2">{site.name || 'Sem nome'}</h3>
+
+        <div className="space-y-2 mb-4">
+            <div className="flex items-center gap-2 text-slate-600">
+                <MapPin size={14} className="text-primary" />
+                <span className="text-xs font-medium uppercase tracking-wide">{site.site_type}</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-600">
+                <Ruler size={14} className="text-secondary" />
+                <span className="text-xs font-bold">{site.area_sqm?.toFixed(1)} m²</span>
+            </div>
+            {site.show_author && site.author_name && (
+                <div className="flex items-center gap-2 text-slate-600 border-t pt-2 mt-2">
+                    <User size={14} className="text-slate-400" />
+                    <span className="text-xs italic">Criado por {site.author_name}</span>
+                </div>
+            )}
+        </div>
+
+        {site.actions_taken && site.actions_taken.length > 0 && (
+            <div className="space-y-2 mb-4">
+                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Ações Realizadas</p>
+                <div className="flex flex-wrap gap-1">
+                    {site.actions_taken.map((action: string) => (
+                        <span key={action} className="px-1.5 py-0.5 bg-nature-50 text-primary-dark rounded text-[10px] font-medium border border-nature-100">
+                            {ACTION_LABELS[action] || action}
+                        </span>
+                    ))}
+                </div>
+            </div>
+        )}
+
+        {site.website_url && (
+            <a
+                href={site.website_url.startsWith('http') ? site.website_url : `https://${site.website_url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-primary hover:underline mt-2"
+            >
+                <ExternalLink size={12} />
+                Visitar Website
+            </a>
+        )}
+    </div>
+);
 
 const StatsCard = ({ label, value, icon }: { label: string, value: string, icon: React.ReactNode }) => (
     <div className="flex-1 glass-panel p-4 flex items-center gap-4">
