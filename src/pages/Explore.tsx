@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, Popup } from 'react-leaflet';
 import { supabase } from '../lib/supabase';
-import { Leaf, Info } from 'lucide-react';
+import { Leaf, Info, MapPin, Ruler } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
 const SITE_COLORS: Record<string, string> = {
@@ -10,6 +10,19 @@ const SITE_COLORS: Record<string, string> = {
     backyard: '#f59e0b',
     school: '#a855f7',
     other: '#64748b'
+};
+
+const ACTION_LABELS: Record<string, string> = {
+    habitats: 'Proteger habitats existentes',
+    mowing: 'Reduzir frequência de corte',
+    planting: 'Plantação amiga de polinizadores',
+    control: 'Controlo de plantas invasoras',
+    nesting: 'Criar locais de nidificação',
+    pesticides: 'Reduzir uso de pesticidas',
+    awareness: 'Sensibilização',
+    tracking: 'Monitorização',
+    bio_general: 'Biodiversidade geral',
+    other: 'Outro'
 };
 
 const Explore = () => {
@@ -84,7 +97,35 @@ const Explore = () => {
                                 weight: 2
                             }}
                         >
-                            {/* Popup could go here */}
+                            <Popup>
+                                <div className="p-1 min-w-[200px]">
+                                    <h3 className="text-lg font-bold text-slate-900 mb-2 border-b pb-2">{site.name || 'Sem nome'}</h3>
+
+                                    <div className="space-y-2 mb-4">
+                                        <div className="flex items-center gap-2 text-slate-600">
+                                            <MapPin size={14} className="text-primary" />
+                                            <span className="text-xs font-medium uppercase tracking-wide">{site.site_type}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-slate-600">
+                                            <Ruler size={14} className="text-secondary" />
+                                            <span className="text-xs font-bold">{site.area_sqm?.toFixed(2)} m²</span>
+                                        </div>
+                                    </div>
+
+                                    {site.actions_taken && site.actions_taken.length > 0 && (
+                                        <div className="space-y-2">
+                                            <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Ações Realizadas</p>
+                                            <div className="flex flex-wrap gap-1">
+                                                {site.actions_taken.map((action: string) => (
+                                                    <span key={action} className="px-1.5 py-0.5 bg-nature-50 text-primary-dark rounded text-[10px] font-medium border border-nature-100">
+                                                        {ACTION_LABELS[action] || action}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </Popup>
                         </GeoJSON>
                     ))}
                 </MapContainer>
