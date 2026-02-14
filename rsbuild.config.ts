@@ -7,6 +7,19 @@ export default defineConfig({
   html: {
     title: 'PolliNature - Restauro da Natureza em Coimbra',
     favicon: './public/favicon.png',
+    tags:
+      process.env.NODE_ENV === 'production'
+        ? [
+            {
+              tag: 'script',
+              attrs: {
+                'data-goatcounter': 'https://pollinature.goatcounter.com/count',
+                async: true,
+                src: '//gc.zgo.at/count.js',
+              },
+            },
+          ]
+        : undefined,
   },
   output: {
     assetPrefix: process.env.NODE_ENV === 'production' ? '/PolliNature/' : '/',
