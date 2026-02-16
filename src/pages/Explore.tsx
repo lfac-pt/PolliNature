@@ -6,12 +6,25 @@ import { Leaf, Info, MapPin, Ruler, User, ExternalLink } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
 const SITE_COLORS: Record<string, string> = {
-    garden: '#10b981',
-    park: '#3b82f6',
-    backyard: '#f59e0b',
-    school: '#a855f7', // purple
-    planters: '#ec4899', // pink
-    other: '#64748b'   // slate
+    public: '#3b82f6',
+    private: '#f59e0b',
+    community: '#10b981',
+    educational: '#a855f7',
+    micro: '#ec4899',
+    riparian: '#06b6d4',
+    linear: '#84cc16',
+    other: '#64748b'
+};
+
+const SITE_LABELS: Record<string, string> = {
+    public: 'Espaços verdes públicos',
+    private: 'Espaços verdes privados',
+    community: 'Espaços verdes comunitários',
+    educational: 'Espaços verdes educativos',
+    micro: 'Microestruturas e soluções baseadas na natureza',
+    riparian: 'Galeria ripícolas e zonas ribeirinhas',
+    linear: 'Infraestruturas verdes lineares e/ou viárias',
+    other: 'Outro'
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -82,13 +95,15 @@ const Explore = () => {
                 <h4 className="font-bold mb-4 flex items-center gap-2">
                     <Info size={16} /> Legenda
                 </h4>
-                <div className="space-y-2">
-                    <LegendItem color={SITE_COLORS.garden} label="Jardins" />
-                    <LegendItem color={SITE_COLORS.park} label="Parques" />
-                    <LegendItem color={SITE_COLORS.backyard} label="Quintais" />
-                    <LegendItem color={SITE_COLORS.school} label="Escolas" />
-                    <LegendItem color={SITE_COLORS.planters} label="Floreiras Públicas" />
-                    <LegendItem color={SITE_COLORS.other} label="Outros" />
+                <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                    <LegendItem color={SITE_COLORS.public} label="Espaços verdes públicos" />
+                    <LegendItem color={SITE_COLORS.private} label="Espaços verdes privados" />
+                    <LegendItem color={SITE_COLORS.community} label="Espaços verdes comunitários" />
+                    <LegendItem color={SITE_COLORS.educational} label="Espaços verdes educativos" />
+                    <LegendItem color={SITE_COLORS.micro} label="Microestruturas e soluções..." />
+                    <LegendItem color={SITE_COLORS.riparian} label="Galeria ripícolas..." />
+                    <LegendItem color={SITE_COLORS.linear} label="Infraestruturas verdes..." />
+                    <LegendItem color={SITE_COLORS.other} label="Outro" />
                 </div>
             </div>
 
@@ -177,7 +192,10 @@ const SitePopupContent = ({ site }: { site: any }) => (
         <div className="space-y-2 mb-4">
             <div className="flex items-center gap-2 text-slate-600">
                 <MapPin size={14} className="text-primary" />
-                <span className="text-xs font-medium uppercase tracking-wide">{site.site_type}</span>
+                <span className="text-xs font-medium uppercase tracking-wide">
+                    {SITE_LABELS[site.site_type] || site.site_type}
+                    {site.site_type === 'other' && site.site_type_other && ` - ${site.site_type_other}`}
+                </span>
             </div>
             <div className="flex items-center gap-2 text-slate-600">
                 <Ruler size={14} className="text-secondary" />

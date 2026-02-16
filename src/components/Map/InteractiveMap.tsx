@@ -25,12 +25,14 @@ interface InteractiveMapProps {
 }
 
 const SITE_COLORS: Record<string, string> = {
-    garden: '#10b981', // emerald
-    park: '#3b82f6',   // blue
-    backyard: '#f59e0b', // amber
-    school: '#a855f7', // purple
-    planters: '#ec4899', // pink
-    other: '#64748b'   // slate
+    public: '#3b82f6',      // blue
+    private: '#f59e0b',     // amber
+    community: '#10b981',   // emerald
+    educational: '#a855f7', // purple
+    micro: '#ec4899',       // pink
+    riparian: '#06b6d4',    // cyan
+    linear: '#84cc16',      // lime
+    other: '#64748b'        // slate
 };
 
 const MapController = ({ onAreaChange, onPolygonChange, siteType }: InteractiveMapProps) => {

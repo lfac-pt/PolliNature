@@ -7,7 +7,8 @@ import { MoveRight, MapPin, Ruler, CheckCircle2 } from 'lucide-react';
 const MapPage = () => {
     const [area, setArea] = useState(0);
     const [polygon, setPolygon] = useState<any>(null);
-    const [siteType, setSiteType] = useState('garden');
+    const [siteType, setSiteType] = useState('public');
+    const [otherDescription, setOtherDescription] = useState('');
     const [name, setName] = useState('');
     const [authorName, setAuthorName] = useState('');
     const [showAuthor, setShowAuthor] = useState(false);
@@ -54,6 +55,7 @@ const MapPage = () => {
         const { error } = await supabase.from('sites').insert({
             name,
             site_type: siteType,
+            site_type_other: siteType === 'other' ? otherDescription : null,
             location: polygon.geometry,
             area_sqm: area,
             actions_taken: selectedActions,
@@ -163,13 +165,25 @@ const MapPage = () => {
                             value={siteType}
                             onChange={(e) => setSiteType(e.target.value)}
                         >
-                            <option value="garden">Jardim</option>
-                            <option value="park">Parque / Espaço Público</option>
-                            <option value="backyard">Quintal / Horta</option>
-                            <option value="school">Escola</option>
-                            <option value="planters">Floreiras Públicas</option>
+                            <option value="public">Espaços verdes públicos</option>
+                            <option value="private">Espaços verdes privados</option>
+                            <option value="community">Espaços verdes comunitários</option>
+                            <option value="educational">Espaços verdes educativos</option>
+                            <option value="micro">Microestruturas e soluções baseadas na natureza</option>
+                            <option value="riparian">Galeria ripícolas e zonas ribeirinhas</option>
+                            <option value="linear">Infraestruturas verdes lineares e/ou viárias</option>
                             <option value="other">Outro</option>
                         </select>
+                        {siteType === 'other' && (
+                            <input
+                                type="text"
+                                className="w-full mt-2 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                placeholder="Descreva o tipo de local..."
+                                value={otherDescription}
+                                onChange={(e) => setOtherDescription(e.target.value)}
+                                required
+                            />
+                        )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
