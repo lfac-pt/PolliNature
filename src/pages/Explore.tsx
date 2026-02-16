@@ -190,12 +190,19 @@ const SitePopupContent = ({ site }: { site: any }) => (
         <h3 className="text-lg font-bold text-slate-900 mb-2 border-b pb-2">{site.name || 'Sem nome'}</h3>
 
         <div className="space-y-2 mb-4">
-            <div className="flex items-center gap-2 text-slate-600">
-                <MapPin size={14} className="text-primary" />
-                <span className="text-xs font-medium uppercase tracking-wide">
-                    {SITE_LABELS[site.site_type] || site.site_type}
-                    {site.site_type === 'other' && site.site_type_other && ` - ${site.site_type_other}`}
-                </span>
+            <div className="flex items-start gap-2 text-slate-600">
+                <MapPin size={14} className="text-primary mt-0.5" />
+                <div className="flex flex-col">
+                    <span className="text-xs font-medium uppercase tracking-wide">
+                        {SITE_LABELS[site.site_type] || site.site_type}
+                        {site.site_type === 'other' && site.site_type_other && ` - ${site.site_type_other}`}
+                    </span>
+                    {site.site_subtype && (
+                        <span className="text-xs text-slate-500 italic">
+                            {site.site_subtype}
+                        </span>
+                    )}
+                </div>
             </div>
             <div className="flex items-center gap-2 text-slate-600">
                 <Ruler size={14} className="text-secondary" />

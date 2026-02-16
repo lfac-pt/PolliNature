@@ -62,6 +62,8 @@ const AdminPage = () => {
                             </div>
                             <div className="flex flex-wrap gap-4 text-sm text-slate-500">
                                 <span className="flex items-center gap-1.5"><MapPin size={14} /> {site.site_type}</span>
+                                {site.site_subtype && <span className="flex items-center gap-1.5 text-slate-500 border p-1 rounded bg-slate-50">{site.site_subtype}</span>}
+                                {site.site_type === 'other' && site.site_type_other && <span className="flex items-center gap-1.5 text-slate-500 border p-1 rounded bg-slate-50">{site.site_type_other}</span>}
                                 <span className="flex items-center gap-1.5"><Ruler size={14} /> {site.area_sqm.toFixed(2)} m²</span>
                                 {site.start_date && (
                                     <span className="flex items-center gap-1.5"><Calendar size={14} /> Início: {new Date(site.start_date).toLocaleDateString()}</span>

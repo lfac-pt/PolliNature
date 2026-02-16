@@ -8,6 +8,7 @@ const MapPage = () => {
     const [area, setArea] = useState(0);
     const [polygon, setPolygon] = useState<any>(null);
     const [siteType, setSiteType] = useState('public');
+    const [subType, setSubType] = useState('');
     const [otherDescription, setOtherDescription] = useState('');
     const [name, setName] = useState('');
     const [authorName, setAuthorName] = useState('');
@@ -20,6 +21,52 @@ const MapPage = () => {
     const [submitted, setSubmitted] = useState(false);
 
     const navigate = useNavigate();
+
+    const SITE_SUBTYPES: Record<string, string[]> = {
+        public: [
+            'Jardins públicos e parques urbanos',
+            'Jardins históricos',
+            'Espaços verdes associados a equipamentos ou instituições públicas',
+            'Outros espaços verdes públicos'
+        ],
+        private: [
+            'Jardins residenciais',
+            'Quintais e hortas',
+            'Terreno com vegetação espontânea',
+            'Espaços verdes associados a empresas, hotéis, comércio ou serviços',
+            'Outros espaços verdes privados'
+        ],
+        community: [
+            'Hortas urbanas comunitárias',
+            'Baldios',
+            'Outros espaços verdes comunitários'
+        ],
+        educational: [
+            'Jardins, espaços verdes e hortas escolares',
+            'Jardins e espaços verdes universitários',
+            'Outros espaços verdes educativos'
+        ],
+        micro: [
+            'Floreiras',
+            'Caldeiras de árvores',
+            'Varandas com plantas',
+            'Telhados verdes',
+            'Paredes verdes',
+            'Outras microestruturas'
+        ],
+        riparian: [
+            'Zonas ribeirinhas com vegetação espontânea',
+            'Taludes ribeirinhos com vegetação espontânea',
+            'Outras zonas húmidas'
+        ],
+        linear: [
+            'Bermas de estrada, caminhos urbanos, ciclovias ou percursos pedonais com vegetação espontânea',
+            'Separadores centrais com vegetação espontânea',
+            'Rotundas com vegetação espontânea',
+            'Taludes rodoviários com vegetação espontânea',
+            'Outras infraestruturas verdes lineares e/ou viárias'
+        ]
+    };
 
     const ACTIONS = [
         { id: 'habitats', label: 'Proteger habitats existentes' },
@@ -55,6 +102,7 @@ const MapPage = () => {
         const { error } = await supabase.from('sites').insert({
             name,
             site_type: siteType,
+            site_subtype: subType || null,
             site_type_other: siteType === 'other' ? otherDescription : null,
             location: polygon.geometry,
             area_sqm: area,
@@ -163,7 +211,10 @@ const MapPage = () => {
                         <select
                             className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all appearance-none bg-white"
                             value={siteType}
-                            onChange={(e) => setSiteType(e.target.value)}
+                            onChange={(e) => {
+                                setSiteType(e.target.value);
+                                setSubType('');
+                            }}
                         >
                             <option value="public">Espaços verdes públicos</option>
                             <option value="private">Espaços verdes privados</option>
@@ -174,10 +225,28 @@ const MapPage = () => {
                             <option value="linear">Infraestruturas verdes lineares e/ou viárias</option>
                             <option value="other">Outro</option>
                         </select>
+
+                        {SITE_SUBTYPES[siteType] && (
+                            <div className="mt-4">
+                                <label className="block text-sm font-semibold text-slate-700 mb-2">Sub-tipo de Local</label>
+                                <select
+                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all appearance-none bg-white"
+                                    value={subType}
+                                    required
+                                    onChange={(e) => setSubType(e.target.value)}
+                                >
+                                    <option value="">Selecione uma opção...</option>
+                                    {SITE_SUBTYPES[siteType].map(sub => (
+                                        <option key={sub} value={sub}>{sub}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+
                         {siteType === 'other' && (
                             <input
                                 type="text"
-                                className="w-full mt-2 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                className="w-full mt-4 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                                 placeholder="Descreva o tipo de local..."
                                 value={otherDescription}
                                 onChange={(e) => setOtherDescription(e.target.value)}
