@@ -13,6 +13,8 @@ const MapPage = () => {
     const [showAuthor, setShowAuthor] = useState(false);
     const [websiteUrl, setWebsiteUrl] = useState('');
     const [selectedActions, setSelectedActions] = useState<string[]>([]);
+    const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+    const [endDate, setEndDate] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
@@ -58,6 +60,8 @@ const MapPage = () => {
             author_name: authorName,
             show_author: showAuthor,
             website_url: websiteUrl,
+            start_date: startDate,
+            end_date: endDate || null,
             user_id: user?.id,
             status: 'pending'
         });
@@ -166,6 +170,29 @@ const MapPage = () => {
                             <option value="planters">Floreiras Públicas</option>
                             <option value="other">Outro</option>
                         </select>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-700 mb-2">Data de Início</label>
+                            <input
+                                type="date"
+                                required
+                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-700 mb-2">Data de Fim <span className="text-slate-400 font-normal">(Opcional)</span></label>
+                            <input
+                                type="date"
+                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                value={endDate}
+                                min={startDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                            />
+                        </div>
                     </div>
 
                     <div>

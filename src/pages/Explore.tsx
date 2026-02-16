@@ -183,6 +183,16 @@ const SitePopupContent = ({ site }: { site: any }) => (
                 <Ruler size={14} className="text-secondary" />
                 <span className="text-xs font-bold">{site.area_sqm?.toFixed(1)} m²</span>
             </div>
+            {site.start_date && (
+                <div className="flex items-center gap-2 text-slate-600">
+                    <span className="text-xs">
+                        {site.end_date
+                            ? `Período: ${new Date(site.start_date).toLocaleDateString()} - ${new Date(site.end_date).toLocaleDateString()}`
+                            : `Desde: ${new Date(site.start_date).toLocaleDateString()}`
+                        }
+                    </span>
+                </div>
+            )}
             {site.show_author && site.author_name && (
                 <div className="flex items-center gap-2 text-slate-600 border-t pt-2 mt-2">
                     <User size={14} className="text-slate-400" />
