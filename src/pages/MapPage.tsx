@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { InteractiveMap } from '../components/Map/InteractiveMap';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
-import { MoveRight, MapPin, Ruler, CheckCircle2, Info } from 'lucide-react';
+import { MoveRight, MapPin, Ruler, CheckCircle2, Info, Upload, X } from 'lucide-react';
+import { resizeImage } from '../utils/imageUtils';
 
 const MapPage = () => {
     const [area, setArea] = useState(0);
@@ -18,6 +19,8 @@ const MapPage = () => {
     const [otherActionsDescription, setOtherActionsDescription] = useState('');
     const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState('');
+    const [imageFile, setImageFile] = useState<Blob | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
@@ -128,6 +131,27 @@ const MapPage = () => {
         );
     };
 
+    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            try {
+                // Resize image to max 800x800, 0.7 quality
+                const resizedBlob = await resizeImage(file, 800, 800, 0.7);
+                setImageFile(resizedBlob);
+                setImagePreview(URL.createObjectURL(resizedBlob));
+            } catch (error) {
+                console.error('Error resizing image:', error);
+                alert('Erro ao processar imagem. Tente novamente.');
+            }
+        }
+    };
+
+    const removeImage = () => {
+        setImageFile(null);
+        if (imagePreview) URL.revokeObjectURL(imagePreview);
+        setImagePreview(null);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!polygon) {
@@ -137,35 +161,71 @@ const MapPage = () => {
 
         setIsSubmitting(true);
 
-        // In a real app, we'd get the user ID from Supabase Auth
-        const { data: { user } } = await supabase.auth.getUser();
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
 
-        const { error } = await supabase.from('sites').insert({
-            name,
-            site_type: siteType,
-            site_subtype: subType || null,
-            site_type_other: siteType === 'other' ? otherDescription : null,
-            location: polygon.geometry,
-            area_sqm: area,
-            actions_taken: selectedActions,
-            actions_other: selectedActions.includes('other') ? otherActionsDescription : null,
-            author_name: authorName,
-            show_author: showAuthor,
-            website_url: websiteUrl,
-            start_date: startDate,
-            end_date: endDate || null,
-            user_id: user?.id,
-            status: 'pending'
-        });
+            if (imageFile && !user) {
+                throw new Error('Apenas utilizadores autenticados podem carregar imagens.');
+            }
 
-        setIsSubmitting(false);
+            // 1. Insert Site first to get ID
+            const { data: siteData, error: insertError } = await supabase
+                .from('sites')
+                .insert({
+                    name,
+                    site_type: siteType,
+                    site_subtype: subType || null,
+                    site_type_other: siteType === 'other' ? otherDescription : null,
+                    location: polygon.geometry,
+                    area_sqm: area,
+                    actions_taken: selectedActions,
+                    actions_other: selectedActions.includes('other') ? otherActionsDescription : null,
+                    author_name: authorName,
+                    show_author: showAuthor,
+                    website_url: websiteUrl,
+                    start_date: startDate,
+                    end_date: endDate || null,
+                    user_id: user?.id,
+                    status: 'pending'
+                })
+                .select()
+                .single();
 
-        if (error) {
+            if (insertError) throw insertError;
+
+            // 2. Upload Image using Site ID as filename (enforces one image per site)
+            if (imageFile && siteData) {
+                const fileExt = 'jpg';
+                const filePath = `sites/${siteData.id}.${fileExt}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('site_images')
+                    .upload(filePath, imageFile, {
+                        upsert: true
+                    });
+
+                if (uploadError) {
+                    console.error('Error uploading image:', uploadError);
+                    alert('Local registado com sucesso, mas ocorreu um erro ao carregar a imagem.');
+                } else {
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('site_images')
+                        .getPublicUrl(filePath);
+
+                    // 3. Update Site with Image URL
+                    await supabase
+                        .from('sites')
+                        .update({ image_url: publicUrl })
+                        .eq('id', siteData.id);
+                }
+            }
+
+            setSubmitted(true);
+        } catch (error: any) {
             console.error('Error saving site:', error);
-            // For demo purposes (since user might not have set up DB yet), we'll simulate success
-            setSubmitted(true);
-        } else {
-            setSubmitted(true);
+            alert(error.message || 'Erro ao submeter o registo. Verifique os dados e tente novamente.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -235,6 +295,40 @@ const MapPage = () => {
                         <label htmlFor="showAuthor" className="text-sm text-slate-600 cursor-pointer select-none">
                             Mostrar nome no mapa público
                         </label>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">Fotografia do Local</label>
+                        <div className="flex items-start gap-4">
+                            {imagePreview ? (
+                                <div className="relative w-32 h-32 rounded-xl overflow-hidden shadow-sm border border-slate-200 group">
+                                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={removeImage}
+                                        className="absolute top-1 right-1 p-1 bg-white/90 rounded-full shadow-sm hover:bg-red-50 text-slate-500 hover:text-red-500 transition-colors"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <label className="flex-1 cursor-pointer group">
+                                    <div className="w-full h-32 border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center bg-slate-50 group-hover:bg-white group-hover:border-primary/50 transition-all">
+                                        <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center mb-2 group-hover:scale-110 transition-transform text-primary">
+                                            <Upload size={20} />
+                                        </div>
+                                        <span className="text-sm font-medium text-slate-600 group-hover:text-primary">Carregar Fotografia</span>
+                                        <span className="text-xs text-slate-400 mt-1">Carregamento automático com redução de tamanho</span>
+                                    </div>
+                                    <input
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp"
+                                        className="hidden"
+                                        onChange={handleImageChange}
+                                    />
+                                </label>
+                            )}
+                        </div>
                     </div>
 
                     <div>

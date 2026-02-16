@@ -195,6 +195,18 @@ const MapContent = ({ sites }: { sites: any[] }) => {
 
 const SitePopupContent = ({ site }: { site: any }) => (
     <div className="p-1 min-w-[200px]">
+        {site.image_url && (
+            <div className="mb-3 rounded-lg overflow-hidden h-32 w-full relative bg-slate-100">
+                <img
+                    src={site.image_url}
+                    alt={site.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                />
+            </div>
+        )}
         <h3 className="text-lg font-bold text-slate-900 mb-2 border-b pb-2">{site.name || 'Sem nome'}</h3>
 
         <div className="space-y-2 mb-4">

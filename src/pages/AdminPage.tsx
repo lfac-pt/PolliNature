@@ -54,8 +54,20 @@ const AdminPage = () => {
 
             <div className="grid gap-6">
                 {sites.map(site => (
-                    <div key={site.id} className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div className="space-y-2">
+                    <div key={site.id} className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-start gap-6">
+                        {site.image_url && (
+                            <a href={site.image_url} target="_blank" rel="noopener noreferrer" className="block w-full md:w-32 h-32 rounded-xl overflow-hidden flex-shrink-0 bg-slate-50 border border-slate-100 group">
+                                <img
+                                    src={site.image_url}
+                                    alt={site.name}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).style.display = 'none';
+                                    }}
+                                />
+                            </a>
+                        )}
+                        <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-3">
                                 <h3 className="text-xl font-bold">{site.name || 'Sem nome'}</h3>
                                 <StatusBadge status={site.status} />
