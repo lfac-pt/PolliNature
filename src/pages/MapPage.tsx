@@ -254,7 +254,7 @@ const MapPage = () => {
     return (
         <div className="flex flex-col lg:flex-row h-[calc(100vh-64px)] overflow-hidden">
             {/* Sidebar Form */}
-            <div className="w-full lg:w-96 bg-white border-r border-slate-100 p-8 overflow-y-auto z-10">
+            <div className="w-full lg:w-[480px] bg-white border-r border-slate-100 p-8 overflow-y-auto z-10">
                 <div className="mb-8">
                     <h1 className="text-3xl mb-2">Mapear Ação</h1>
                     <p className="text-slate-500">Registe a sua intervenção de restauro da natureza no concelho de Coimbra.</p>
