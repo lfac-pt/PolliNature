@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { InteractiveMap } from '../components/Map/InteractiveMap';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
-import { MoveRight, MapPin, Ruler, CheckCircle2 } from 'lucide-react';
+import { MoveRight, MapPin, Ruler, CheckCircle2, Info } from 'lucide-react';
 
 const MapPage = () => {
     const [area, setArea] = useState(0);
@@ -15,6 +15,7 @@ const MapPage = () => {
     const [showAuthor, setShowAuthor] = useState(false);
     const [websiteUrl, setWebsiteUrl] = useState('');
     const [selectedActions, setSelectedActions] = useState<string[]>([]);
+    const [otherActionsDescription, setOtherActionsDescription] = useState('');
     const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,16 +70,56 @@ const MapPage = () => {
     };
 
     const ACTIONS = [
-        { id: 'habitats', label: 'Proteger habitats existentes' },
-        { id: 'mowing', label: 'Reduzir frequência de corte' },
-        { id: 'planting', label: 'Plantação amiga de polinizadores' },
-        { id: 'control', label: 'Controlo de plantas invasoras' },
-        { id: 'nesting', label: 'Criar locais de nidificação' },
-        { id: 'pesticides', label: 'Reduzir uso de pesticidas' },
-        { id: 'awareness', label: 'Sensibilização' },
-        { id: 'tracking', label: 'Monitorização' },
-        { id: 'bio_general', label: 'Biodiversidade geral' },
-        { id: 'other', label: 'Outro' },
+        {
+            id: 'floral_resources',
+            label: 'Manutenção de recursos florais nativos espontâneos',
+            tooltip: 'Conservação de áreas com plantas com flor nativas espontâneas'
+        },
+        {
+            id: 'support_structures',
+            label: 'Manutenção de estruturas de suporte existentes',
+            tooltip: 'e.g., conservação de muros de pedra e taludes, manutenção de sebes com arbustos nativos'
+        },
+        {
+            id: 'vegetation_management',
+            label: 'Gestão diferenciada do coberto vegetal',
+            tooltip: 'e.g., redução da frequência de corte da relva, adiamento do corte para o final do verão para permitir a floração e a sementeira natural'
+        },
+        {
+            id: 'planting',
+            label: 'Plantação e sementeira de flora diversa',
+            tooltip: 'e.g., criação de prados com sementes de plantas com flor silvestres nativas, plantação de aromáticas ou árvores de fruto nativas'
+        },
+        {
+            id: 'invasive_control',
+            label: 'Controlo de plantas invasoras',
+            tooltip: 'e.g., remoção manual de mimosas, penachos ou outras espécies exóticas invasoras'
+        },
+        {
+            id: 'nesting',
+            label: 'Criação de locais de abrigo e/ou nidificação',
+            tooltip: 'e.g., instalação de hotéis de insetos, manutenção de madeira morta, criação de áreas de solo exposto'
+        },
+        {
+            id: 'chemicals',
+            label: 'Eliminação do uso de químicos',
+            tooltip: 'e.g., substituição de herbicidas por monda mecânica, eliminação total do uso de pesticidas e herbicidas'
+        },
+        {
+            id: 'education',
+            label: 'Iniciativas de educação e sensibilização ambiental',
+            tooltip: 'e.g., colocação de sinalética explicativa no local, organização de workshops ou visitas guiadas sobre polinizadores'
+        },
+        {
+            id: 'monitoring',
+            label: 'Monitorização e/ou participação em projetos de ciência cidadã',
+            tooltip: 'e.g., registo de observações no BioDiversity4All, realização de contagens FITCount, participação no eBMS'
+        },
+        {
+            id: 'other',
+            label: 'Outro',
+            tooltip: ''
+        },
     ];
 
     const handleActionToggle = (id: string) => {
@@ -107,6 +148,7 @@ const MapPage = () => {
             location: polygon.geometry,
             area_sqm: area,
             actions_taken: selectedActions,
+            actions_other: selectedActions.includes('other') ? otherActionsDescription : null,
             author_name: authorName,
             show_author: showAuthor,
             website_url: websiteUrl,
@@ -282,17 +324,39 @@ const MapPage = () => {
                         <label className="block text-sm font-semibold text-slate-700 mb-3">Ações Realizadas</label>
                         <div className="space-y-2 max-h-48 overflow-y-auto pr-2 overflow-x-hidden">
                             {ACTIONS.map(action => (
-                                <label key={action.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors group">
-                                    <input
-                                        type="checkbox"
-                                        className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary transition-all cursor-pointer"
-                                        checked={selectedActions.includes(action.id)}
-                                        onChange={() => handleActionToggle(action.id)}
-                                    />
-                                    <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors leading-tight">
-                                        {action.label}
-                                    </span>
-                                </label>
+                                <div key={action.id}>
+                                    <label className="flex items-start gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors group">
+                                        <input
+                                            type="checkbox"
+                                            className="w-5 h-5 mt-0.5 rounded border-slate-300 text-primary focus:ring-primary transition-all cursor-pointer flex-shrink-0"
+                                            checked={selectedActions.includes(action.id)}
+                                            onChange={() => handleActionToggle(action.id)}
+                                        />
+                                        <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors leading-tight select-none flex-1">
+                                            {action.label}
+                                            {action.tooltip && (
+                                                <span className="inline-block ml-1.5 text-slate-400 hover:text-primary align-top mt-0.5" title={action.tooltip}>
+                                                    <Info size={14} />
+                                                </span>
+                                            )}
+                                        </span>
+                                    </label>
+                                    {action.id === 'other' && selectedActions.includes('other') && (
+                                        <div className="pl-10 pr-2 pb-2">
+                                            <textarea
+                                                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none"
+                                                placeholder="Descreva as outras ações..."
+                                                value={otherActionsDescription}
+                                                onChange={(e) => setOtherActionsDescription(e.target.value)}
+                                                maxLength={300}
+                                                rows={2}
+                                            />
+                                            <div className="text-xs text-slate-400 text-right mt-1">
+                                                {otherActionsDescription.length}/300
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             ))}
                         </div>
                     </div>

@@ -28,16 +28,24 @@ const SITE_LABELS: Record<string, string> = {
 };
 
 const ACTION_LABELS: Record<string, string> = {
+    floral_resources: 'Manutenção de recursos florais nativos espontâneos',
+    support_structures: 'Manutenção de estruturas de suporte existentes',
+    vegetation_management: 'Gestão diferenciada do coberto vegetal',
+    planting: 'Plantação e sementeira de flora diversa',
+    invasive_control: 'Controlo de plantas invasoras',
+    nesting: 'Criação de locais de abrigo e/ou nidificação',
+    chemicals: 'Eliminação do uso de químicos',
+    education: 'Iniciativas de educação e sensibilização ambiental',
+    monitoring: 'Monitorização e/ou participação em projetos de ciência cidadã',
+    other: 'Outro',
+    // Legacy mapping
     habitats: 'Proteger habitats existentes',
     mowing: 'Reduzir frequência de corte',
-    planting: 'Plantação amiga de polinizadores',
     control: 'Controlo de plantas invasoras',
-    nesting: 'Criar locais de nidificação',
     pesticides: 'Reduzir uso de pesticidas',
     awareness: 'Sensibilização',
     tracking: 'Monitorização',
-    bio_general: 'Biodiversidade geral',
-    other: 'Outro'
+    bio_general: 'Biodiversidade geral'
 };
 
 const Explore = () => {
