@@ -159,6 +159,16 @@ const MapPage = () => {
             return;
         }
 
+        if (!imageFile) {
+            alert('Por favor, carregue uma fotografia do local.');
+            return;
+        }
+
+        if (selectedActions.length === 0) {
+            alert('Por favor, selecione pelo menos uma ação realizada.');
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
@@ -274,30 +284,6 @@ const MapPage = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">Ação Realizada por (Nome/Entidade)</label>
-                        <input
-                            type="text"
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                            placeholder="Ex: Nome do morador ou associação"
-                            value={authorName}
-                            onChange={(e) => setAuthorName(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-                        <input
-                            type="checkbox"
-                            id="showAuthor"
-                            className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
-                            checked={showAuthor}
-                            onChange={(e) => setShowAuthor(e.target.checked)}
-                        />
-                        <label htmlFor="showAuthor" className="text-sm text-slate-600 cursor-pointer select-none">
-                            Mostrar nome no mapa público
-                        </label>
-                    </div>
-
-                    <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-2">Fotografia do Local</label>
                         <div className="flex items-start gap-4">
                             {imagePreview ? (
@@ -332,7 +318,32 @@ const MapPage = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">Website / Redes Sociais</label>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">Ação Realizada por (Nome/Entidade)</label>
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                required
+                                className="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400"
+                                placeholder="Ex: Nome do morador ou associação"
+                                value={authorName}
+                                onChange={(e) => setAuthorName(e.target.value)}
+                            />
+                            <label className={`flex items-center gap-2 px-4 rounded-xl border cursor-pointer transition-all select-none ${showAuthor ? 'bg-nature-100 border-nature-200 text-primary-dark' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}>
+                                <input
+                                    type="checkbox"
+                                    className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary"
+                                    checked={showAuthor}
+                                    onChange={(e) => setShowAuthor(e.target.checked)}
+                                />
+                                <span className="text-sm font-medium">Público</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">
+                            Website / Redes Sociais <span className="text-slate-400 font-normal ml-1">(Opcional)</span>
+                        </label>
                         <input
                             type="url"
                             className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
