@@ -159,11 +159,6 @@ const MapPage = () => {
             return;
         }
 
-        if (!imageFile) {
-            alert('Por favor, carregue uma fotografia do local.');
-            return;
-        }
-
         if (selectedActions.length === 0) {
             alert('Por favor, selecione pelo menos uma ação realizada.');
             return;
@@ -284,7 +279,7 @@ const MapPage = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">Fotografia do Local</label>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">Fotografia do Local <span className="text-slate-400 font-normal ml-1">(Opcional)</span></label>
                         <div className="flex items-start gap-4">
                             {imagePreview ? (
                                 <div className="relative w-32 h-32 rounded-xl overflow-hidden shadow-sm border border-slate-200 group">
