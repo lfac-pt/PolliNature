@@ -99,10 +99,8 @@ const Explore = () => {
             </div>
 
             {/* Legend */}
-            <div className="absolute bottom-10 left-6 z-[1000] glass-panel p-6 max-w-xs">
-                <h4 className="font-bold mb-4 flex items-center gap-2">
-                    <Info size={16} /> Legenda
-                </h4>
+            <div className="absolute bottom-10 left-6 z-[1000] glass-panel p-4 max-w-xs">
+
                 <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
                     <LegendItem color={SITE_COLORS.public} label="Espaços verdes públicos" />
                     <LegendItem color={SITE_COLORS.private} label="Espaços verdes privados" />
@@ -287,8 +285,8 @@ const StatsCard = ({ label, value, icon }: { label: string, value: string, icon:
 
 const LegendItem = ({ color, label }: { color: string, label: string }) => (
     <div className="flex items-center gap-3">
-        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
-        <span className="text-sm text-slate-600 font-medium">{label}</span>
+        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
+        <span className="text-xs text-slate-600 font-medium">{label}</span>
     </div>
 );
 
