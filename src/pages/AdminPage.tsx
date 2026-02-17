@@ -3,6 +3,27 @@ import { supabase } from '../lib/supabase';
 import { Check, X, Clock, MapPin, Ruler, ExternalLink, User, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const ACTION_LABELS: Record<string, string> = {
+    floral_resources: 'Manutenção de recursos florais',
+    support_structures: 'Manutenção de estruturas',
+    vegetation_management: 'Gestão do coberto vegetal',
+    planting: 'Plantação/sementeira',
+    invasive_control: 'Controlo de invasoras',
+    nesting: 'Abrigo/nidificação',
+    chemicals: 'Sem químicos',
+    education: 'Educação ambiental',
+    monitoring: 'Monitorização',
+    other: 'Outro',
+    // Legacy mapping
+    habitats: 'Proteger habitats',
+    mowing: 'Reduzir corte',
+    control: 'Controlo invasoras',
+    pesticides: 'Sem pesticidas',
+    awareness: 'Sensibilização',
+    tracking: 'Monitorização',
+    bio_general: 'Biodiversidade'
+};
+
 const AdminPage = () => {
     const [sites, setSites] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -93,7 +114,7 @@ const AdminPage = () => {
                                 <div className="flex flex-wrap gap-2 mt-4">
                                     {site.actions_taken.map((action: string) => (
                                         <span key={action} className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold uppercase tracking-tight">
-                                            {action}
+                                            {action === 'other' && site.actions_other ? site.actions_other : (ACTION_LABELS[action] || action)}
                                         </span>
                                     ))}
                                 </div>

@@ -430,37 +430,34 @@ const MapPage = () => {
                         <div className="space-y-2 max-h-48 overflow-y-auto pr-2 overflow-x-hidden">
                             {ACTIONS.map(action => (
                                 <div key={action.id}>
-                                    <label className="flex items-start gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors group">
+                                    <label className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors group">
                                         <input
                                             type="checkbox"
-                                            className="w-5 h-5 mt-0.5 rounded border-slate-300 text-primary focus:ring-primary transition-all cursor-pointer flex-shrink-0"
+                                            className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary transition-all cursor-pointer flex-shrink-0"
                                             checked={selectedActions.includes(action.id)}
                                             onChange={() => handleActionToggle(action.id)}
                                         />
-                                        <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors leading-tight select-none flex-1">
-                                            {action.label}
-                                            {action.tooltip && (
-                                                <span className="inline-block ml-1.5 text-slate-400 hover:text-primary align-top mt-0.5" title={action.tooltip}>
-                                                    <Info size={14} />
-                                                </span>
-                                            )}
-                                        </span>
-                                    </label>
-                                    {action.id === 'other' && selectedActions.includes('other') && (
-                                        <div className="pl-10 pr-2 pb-2">
-                                            <textarea
-                                                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none"
-                                                placeholder="Descreva as outras ações..."
+                                        {action.id === 'other' && selectedActions.includes(action.id) ? (
+                                            <input
+                                                type="text"
+                                                autoFocus
+                                                className="flex-1 px-3 py-1.5 text-sm rounded-lg border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                                placeholder="Descreva qual..."
                                                 value={otherActionsDescription}
                                                 onChange={(e) => setOtherActionsDescription(e.target.value)}
-                                                maxLength={300}
-                                                rows={2}
+                                                onClick={(e) => e.preventDefault()}
                                             />
-                                            <div className="text-xs text-slate-400 text-right mt-1">
-                                                {otherActionsDescription.length}/300
-                                            </div>
-                                        </div>
-                                    )}
+                                        ) : (
+                                            <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors leading-tight select-none flex-1 flex items-center gap-1.5">
+                                                {action.label}
+                                                {action.tooltip && (
+                                                    <span className="text-slate-400 hover:text-primary" title={action.tooltip}>
+                                                        <Info size={14} />
+                                                    </span>
+                                                )}
+                                            </span>
+                                        )}
+                                    </label>
                                 </div>
                             ))}
                         </div>

@@ -252,7 +252,7 @@ const SitePopupContent = ({ site }: { site: any }) => (
                 <div className="flex flex-wrap gap-1">
                     {site.actions_taken.map((action: string) => (
                         <span key={action} className="px-1.5 py-0.5 bg-nature-50 text-primary-dark rounded text-[10px] font-medium border border-nature-100">
-                            {ACTION_LABELS[action] || action}
+                            {action === 'other' && site.actions_other ? site.actions_other : (ACTION_LABELS[action] || action)}
                         </span>
                     ))}
                 </div>
