@@ -2,22 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Popup, CircleMarker, useMapEvents, LayersControl } from 'react-leaflet';
 import * as turf from '@turf/turf';
 import { supabase } from '../lib/supabase';
-import { Leaf, Info, MapPin, Ruler, User, ExternalLink } from 'lucide-react';
+import { Leaf, MapPin, Ruler, User, ExternalLink } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 import { SITE_COLORS, SITE_LABELS, ACTION_LABELS } from '../constants/site';
 
 
 
+import { useAuth } from '../lib/AuthContext';
+
 const Explore = () => {
+    const { user } = useAuth();
     const [sites, setSites] = useState<any[]>([]);
-    const [stats, setStats] = useState({ totalArea: 0, count: 0 });
+    const [showMySitesOnly, setShowMySitesOnly] = useState(false);
 
     useEffect(() => {
         const fetchSites = async () => {
             const { data } = await supabase
                 .from('sites')
-                .select('*')
-                .eq('status', 'approved');
+                .select('*');
 
             if (data) {
                 // Pre-calculate centers for better performance
@@ -34,13 +36,20 @@ const Explore = () => {
                 });
 
                 setSites(sitesWithCenters);
-                const total = data.reduce((acc, site) => acc + (site.area_sqm || 0), 0);
-                setStats({ totalArea: total, count: data.length });
             }
         };
 
         fetchSites();
     }, []);
+
+    const filteredSites = showMySitesOnly && user
+        ? sites.filter(s => s.user_id === user.id)
+        : sites;
+
+    const stats = {
+        totalArea: filteredSites.reduce((acc, site) => acc + (site.area_sqm || 0), 0),
+        count: filteredSites.length
+    };
 
     return (
         <div className="h-[calc(100vh-64px)] relative flex flex-col">
@@ -58,9 +67,28 @@ const Explore = () => {
                 />
             </div>
 
-            {/* Legend */}
-            <div className="absolute bottom-10 left-6 z-[1000] glass-panel p-4 max-w-xs">
+            {/* Top Right Controls - Positioned below standard Leaflet controls */}
+            <div className="absolute top-[80px] right-[10px] z-[1000] flex flex-col gap-2">
+                {user && (
+                    <div className="bg-white p-2 rounded-md shadow-md border border-slate-300">
+                        <label className="flex items-center gap-2 cursor-pointer group select-none">
+                            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider group-hover:text-primary transition-colors">Meus Locais</span>
+                            <div className={`relative w-8 h-4 transition-colors rounded-full ${showMySitesOnly ? 'bg-primary' : 'bg-slate-300'}`}>
+                                <div className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full shadow-sm transition-transform ${showMySitesOnly ? 'translate-x-4' : 'translate-x-0'}`} />
+                            </div>
+                            <input
+                                type="checkbox"
+                                checked={showMySitesOnly}
+                                onChange={(e) => setShowMySitesOnly(e.target.checked)}
+                                className="hidden"
+                            />
+                        </label>
+                    </div>
+                )}
+            </div>
 
+            {/* Legend */}
+            <div className="absolute bottom-10 left-6 z-[1000] glass-panel p-4 max-w-xs flex flex-col gap-4">
                 <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
                     <LegendItem color={SITE_COLORS.public} label="Espaços verdes públicos" />
                     <LegendItem color={SITE_COLORS.private} label="Espaços verdes privados" />
@@ -93,7 +121,7 @@ const Explore = () => {
                             />
                         </LayersControl.BaseLayer>
                     </LayersControl>
-                    <MapContent sites={sites} />
+                    <MapContent sites={filteredSites} />
                 </MapContainer>
             </div>
         </div>
@@ -137,7 +165,8 @@ const MapContent = ({ sites }: { sites: any[] }) => {
                                 color: SITE_COLORS[site.site_type] || '#ccc',
                                 fillColor: SITE_COLORS[site.site_type] || '#ccc',
                                 fillOpacity: 0.5,
-                                weight: 2
+                                weight: 2,
+                                dashArray: site.status === 'pending' ? '5, 5' : undefined
                             }}
                         >
                             <Popup>
@@ -165,7 +194,14 @@ const SitePopupContent = ({ site }: { site: any }) => (
                 />
             </div>
         )}
-        <h3 className="text-lg font-bold text-slate-900 mb-2 border-b pb-2">{site.name || 'Sem nome'}</h3>
+        <div className="flex items-center justify-between mb-2 pb-2 border-b">
+            <h3 className="text-lg font-bold text-slate-900">{site.name || 'Sem nome'}</h3>
+            {site.status === 'pending' && (
+                <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold uppercase rounded-full tracking-wider border border-amber-200">
+                    Pendente
+                </span>
+            )}
+        </div>
 
         <div className="space-y-2 mb-4">
             <div className="flex items-start gap-2 text-slate-600">
