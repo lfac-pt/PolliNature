@@ -15,6 +15,11 @@ const AdminPage = () => {
         fetchSites();
     }, []);
 
+    const handleEdit = (id: string) => {
+        // Navigate to map page with edit mode
+        window.location.href = `/map/${id}`;
+    };
+
     const fetchSites = async () => {
         setLoading(true);
         const { data } = await supabase
@@ -138,6 +143,13 @@ const AdminPage = () => {
                             {site.status === 'pending' && (
                                 <>
                                     <button
+                                        onClick={() => handleEdit(site.id)}
+                                        className="h-12 w-12 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition-colors"
+                                        title="Editar"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                    </button>
+                                    <button
                                         onClick={() => handleStatusUpdate(site.id, 'approved')}
                                         className="h-12 px-6 rounded-2xl bg-nature-100 text-primary-dark font-bold flex items-center gap-2 hover:bg-nature-200 transition-colors"
                                     >
@@ -152,12 +164,21 @@ const AdminPage = () => {
                                 </>
                             )}
                             {site.status !== 'pending' && (
-                                <button
-                                    onClick={() => handleStatusUpdate(site.id, 'pending')}
-                                    className="h-12 px-4 rounded-2xl bg-slate-50 text-slate-400 font-medium text-sm hover:text-slate-600 transition-colors"
-                                >
-                                    Mover para Pendente
-                                </button>
+                                <>
+                                    <button
+                                        onClick={() => handleEdit(site.id)}
+                                        className="h-12 w-12 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition-colors"
+                                        title="Editar"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                    </button>
+                                    <button
+                                        onClick={() => handleStatusUpdate(site.id, 'pending')}
+                                        className="h-12 px-4 rounded-2xl bg-slate-50 text-slate-400 font-medium text-sm hover:text-slate-600 transition-colors"
+                                    >
+                                        Mover para Pendente
+                                    </button>
+                                </>
                             )}
                         </div>
                     </div>

@@ -255,7 +255,7 @@ const SitePopupContent = ({ site, user }: { site: any, user: any }) => (
 
         {/* Action Buttons */}
         <div className="flex flex-col gap-2 mt-4">
-            {user && user.id === site.user_id && (
+            {user && (user.id === site.user_id || ['lfac.pt@gmail.com', 'jloureiro@uc.pt'].includes(user.email || '')) && (
                 <a
                     href={`/map/${site.id}`}
                     className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-xs font-bold transition-colors"

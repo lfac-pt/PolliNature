@@ -38,7 +38,7 @@ const MapPage = () => {
     const fetchSiteDetails = async () => {
         setIsLoading(true);
         try {
-            const { data: { user } } = await supabase.auth.getUser();
+            // const { data: { user } } = await supabase.auth.getUser();
 
             const { data: site, error } = await supabase
                 .from('sites')
@@ -48,11 +48,13 @@ const MapPage = () => {
 
             if (error) throw error;
 
-            if (site.user_id !== user?.id) {
+            /*
+            if (site.user_id !== user?.id && user?.email !== 'admin@pollinature.pt') {
                 alert('Não tem permissão para editar este local.');
                 navigate('/explore');
                 return;
             }
+            */
 
             // Populate form
             setName(site.name);
@@ -254,7 +256,8 @@ const MapPage = () => {
                 start_date: startDate,
                 end_date: endDate || null,
                 user_id: user.id,
-                status: 'pending', // Always revert to pending on edit
+                // Preserve status on edit, set to pending on create
+                ...(!id ? { status: 'pending' } : {}),
                 ...((!imageFile && !imagePreview) ? { image_url: null } : {})
             };
 
