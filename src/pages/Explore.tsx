@@ -121,7 +121,7 @@ const Explore = () => {
                             />
                         </LayersControl.BaseLayer>
                     </LayersControl>
-                    <MapContent sites={filteredSites} />
+                    <MapContent sites={filteredSites} user={user} />
                 </MapContainer>
             </div>
         </div>
@@ -129,7 +129,7 @@ const Explore = () => {
 };
 
 // Component to handle zoom events and rendering switch
-const MapContent = ({ sites }: { sites: any[] }) => {
+const MapContent = ({ sites, user }: { sites: any[], user: any }) => {
     const [zoom, setZoom] = useState(13);
 
     useMapEvents({
@@ -155,7 +155,7 @@ const MapContent = ({ sites }: { sites: any[] }) => {
                             radius={8}
                         >
                             <Popup>
-                                <SitePopupContent site={site} />
+                                <SitePopupContent site={site} user={user} />
                             </Popup>
                         </CircleMarker>
                     ) : (
@@ -170,7 +170,7 @@ const MapContent = ({ sites }: { sites: any[] }) => {
                             }}
                         >
                             <Popup>
-                                <SitePopupContent site={site} />
+                                <SitePopupContent site={site} user={user} />
                             </Popup>
                         </GeoJSON>
                     )}
@@ -180,7 +180,7 @@ const MapContent = ({ sites }: { sites: any[] }) => {
     );
 };
 
-const SitePopupContent = ({ site }: { site: any }) => (
+const SitePopupContent = ({ site, user }: { site: any, user: any }) => (
     <div className="p-1 min-w-[200px]">
         {site.image_url && (
             <div className="mb-3 rounded-lg overflow-hidden h-32 w-full relative bg-slate-100">
@@ -253,17 +253,30 @@ const SitePopupContent = ({ site }: { site: any }) => (
             </div>
         )}
 
-        {site.website_url && (
-            <a
-                href={site.website_url.startsWith('http') ? site.website_url : `https://${site.website_url}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-primary hover:underline mt-2"
-            >
-                <ExternalLink size={12} />
-                Visitar Website
-            </a>
-        )}
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-2 mt-4">
+            {user && user.id === site.user_id && (
+                <a
+                    href={`/map/${site.id}`}
+                    className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-xs font-bold transition-colors"
+                >
+                    <Leaf size={14} />
+                    Editar Local
+                </a>
+            )}
+
+            {site.website_url && (
+                <a
+                    href={site.website_url.startsWith('http') ? site.website_url : `https://${site.website_url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg text-xs font-bold transition-colors"
+                >
+                    <ExternalLink size={14} />
+                    Visitar Website
+                </a>
+            )}
+        </div>
     </div>
 );
 

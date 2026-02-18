@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InteractiveMap } from '../components/Map/InteractiveMap';
 import { supabase } from '../lib/supabase';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { MoveRight, MapPin, Ruler, CheckCircle2, Info, Upload, X } from 'lucide-react';
 import { resizeImage } from '../utils/imageUtils';
 
 const MapPage = () => {
+    const { id } = useParams();
     const [area, setArea] = useState(0);
     const [polygon, setPolygon] = useState<any>(null);
+    const [initialPolygon, setInitialPolygon] = useState<any>(null);
     const [siteType, setSiteType] = useState('public');
     const [subType, setSubType] = useState('');
     const [otherDescription, setOtherDescription] = useState('');
@@ -23,8 +25,70 @@ const MapPage = () => {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(!!id);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (id) {
+            fetchSiteDetails();
+        }
+    }, [id]);
+
+    const fetchSiteDetails = async () => {
+        setIsLoading(true);
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+
+            const { data: site, error } = await supabase
+                .from('sites')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (error) throw error;
+
+            if (site.user_id !== user?.id) {
+                alert('Não tem permissão para editar este local.');
+                navigate('/explore');
+                return;
+            }
+
+            // Populate form
+            setName(site.name);
+            setSiteType(site.site_type);
+            setSubType(site.site_subtype || '');
+            if (site.site_type === 'other') setOtherDescription(site.site_type_other || '');
+            setAuthorName(site.author_name || '');
+            setShowAuthor(site.show_author);
+            setWebsiteUrl(site.website_url || '');
+            setStartDate(site.start_date);
+            setEndDate(site.end_date || '');
+            setSelectedActions(site.actions_taken || []);
+            if (site.actions_taken?.includes('other')) setOtherActionsDescription(site.actions_other || '');
+
+            // Map & Area
+            setArea(site.area_sqm);
+            setPolygon({ geometry: site.location });
+            setInitialPolygon(site.location);
+
+            // Image
+            if (site.image_url) {
+                // Add cache buster to prevent stale image
+                const versionedUrl = site.image_url.includes('?')
+                    ? `${site.image_url}&v=${new Date().getTime()}`
+                    : `${site.image_url}?v=${new Date().getTime()}`;
+                setImagePreview(versionedUrl);
+            }
+
+        } catch (error) {
+            console.error('Error fetching site:', error);
+            alert('Erro ao carregar os dados do local.');
+            navigate('/explore');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const SITE_SUBTYPES: Record<string, string[]> = {
         public: [
@@ -164,44 +228,62 @@ const MapPage = () => {
             return;
         }
 
+
+
         setIsSubmitting(true);
 
         try {
             const { data: { user } } = await supabase.auth.getUser();
 
-            if (imageFile && !user) {
-                throw new Error('Apenas utilizadores autenticados podem carregar imagens.');
+            if (!user) {
+                throw new Error('Apenas utilizadores autenticados podem registar sítios.');
             }
 
-            // 1. Insert Site first to get ID
-            const { data: siteData, error: insertError } = await supabase
-                .from('sites')
-                .insert({
-                    name,
-                    site_type: siteType,
-                    site_subtype: subType || null,
-                    site_type_other: siteType === 'other' ? otherDescription : null,
-                    location: polygon.geometry,
-                    area_sqm: area,
-                    actions_taken: selectedActions,
-                    actions_other: selectedActions.includes('other') ? otherActionsDescription : null,
-                    author_name: authorName,
-                    show_author: showAuthor,
-                    website_url: websiteUrl,
-                    start_date: startDate,
-                    end_date: endDate || null,
-                    user_id: user?.id,
-                    status: 'pending'
-                })
-                .select()
-                .single();
+            const siteDataPayload = {
+                name,
+                site_type: siteType,
+                site_subtype: subType || null,
+                site_type_other: siteType === 'other' ? otherDescription : null,
+                location: polygon.geometry || polygon,
+                area_sqm: area,
+                actions_taken: selectedActions,
+                actions_other: selectedActions.includes('other') ? otherActionsDescription : null,
+                author_name: authorName,
+                show_author: showAuthor,
+                website_url: websiteUrl,
+                start_date: startDate,
+                end_date: endDate || null,
+                user_id: user.id,
+                status: 'pending', // Always revert to pending on edit
+                ...((!imageFile && !imagePreview) ? { image_url: null } : {})
+            };
 
-            if (insertError) throw insertError;
+            let siteId = id;
 
-            // 2. Upload Image using Site ID as filename (enforces one image per site)
-            if (imageFile && siteData) {
+            if (id) {
+                // UPDATE existing
+                const { error: updateError } = await supabase
+                    .from('sites')
+                    .update(siteDataPayload)
+                    .eq('id', id);
+
+                if (updateError) throw updateError;
+            } else {
+                // INSERT new
+                const { data: newSite, error: insertError } = await supabase
+                    .from('sites')
+                    .insert(siteDataPayload)
+                    .select()
+                    .single();
+
+                if (insertError) throw insertError;
+                siteId = newSite.id;
+            }
+
+            // Upload Image if new file selected
+            if (imageFile && siteId) {
                 const fileExt = 'jpg';
-                const filePath = `sites/${siteData.id}.${fileExt}`;
+                const filePath = `sites/${siteId}.${fileExt}`;
 
                 const { error: uploadError } = await supabase.storage
                     .from('site_images')
@@ -211,17 +293,18 @@ const MapPage = () => {
 
                 if (uploadError) {
                     console.error('Error uploading image:', uploadError);
-                    alert('Local registado com sucesso, mas ocorreu um erro ao carregar a imagem.');
+                    alert('Impossível carregar a nova imagem, mas os dados foram guardos.');
                 } else {
                     const { data: { publicUrl } } = supabase.storage
                         .from('site_images')
                         .getPublicUrl(filePath);
 
-                    // 3. Update Site with Image URL
+                    // Update Site with Image URL
+                    const versionedUrl = `${publicUrl}?v=${new Date().getTime()}`;
                     await supabase
                         .from('sites')
-                        .update({ image_url: publicUrl })
-                        .eq('id', siteData.id);
+                        .update({ image_url: versionedUrl })
+                        .eq('id', siteId);
                 }
             }
 
@@ -234,6 +317,14 @@ const MapPage = () => {
         }
     };
 
+    if (isLoading) {
+        return (
+            <div className="flex h-screen items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
+
     if (submitted) {
         return (
             <div className="container mx-auto px-6 py-20 text-center">
@@ -241,15 +332,18 @@ const MapPage = () => {
                     <div className="w-20 h-20 bg-nature-100 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 size={40} />
                     </div>
-                    <h1 className="text-3xl mb-4">Registo Recebido!</h1>
+                    <h1 className="text-3xl mb-4">{id ? 'Local Atualizado!' : 'Registo Recebido!'}</h1>
                     <p className="text-slate-600 mb-8">
-                        Obrigado por contribuir para a biodiversidade em Coimbra. O seu registo será validado pela nossa equipa antes de aparecer no mapa público.
+                        {id
+                            ? 'O local foi atualizado com sucesso. Se fez alterações significativas, poderá passar por nova validação.'
+                            : 'Obrigado por contribuir para a biodiversidade em Coimbra. O seu registo será validado pela nossa equipa antes de aparecer no mapa público.'
+                        }
                     </p>
                     <button
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate('/explore')}
                         className="btn-primary w-full"
                     >
-                        Voltar ao Início
+                        Voltar ao Mapa
                     </button>
                 </div>
             </div>
@@ -261,8 +355,10 @@ const MapPage = () => {
             {/* Sidebar Form */}
             <div className="w-full lg:w-[480px] bg-white border-r border-slate-100 p-8 overflow-y-auto z-10">
                 <div className="mb-8">
-                    <h1 className="text-3xl mb-2">Mapear Ação</h1>
-                    <p className="text-slate-500">Registe a sua intervenção de restauro da natureza no concelho de Coimbra.</p>
+                    <h1 className="text-3xl mb-2">{id ? 'Editar Local' : 'Mapear Ação'}</h1>
+                    <p className="text-slate-500">
+                        {id ? 'Edite as informações do seu local.' : 'Registe a sua intervenção de restauro da natureza no concelho de Coimbra.'}
+                    </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -494,6 +590,7 @@ const MapPage = () => {
                     onAreaChange={setArea}
                     onPolygonChange={setPolygon}
                     siteType={siteType}
+                    initialPolygon={initialPolygon}
                 />
 
                 {/* Floating instruction */}

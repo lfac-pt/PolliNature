@@ -22,6 +22,7 @@ interface InteractiveMapProps {
     onAreaChange: (area: number) => void;
     onPolygonChange: (geoJson: any) => void;
     siteType: string;
+    initialPolygon?: any;
 }
 
 const SITE_COLORS: Record<string, string> = {
@@ -35,7 +36,7 @@ const SITE_COLORS: Record<string, string> = {
     other: '#64748b'        // slate
 };
 
-const MapController = ({ onAreaChange, onPolygonChange, siteType }: InteractiveMapProps) => {
+const MapController = ({ onAreaChange, onPolygonChange, siteType, initialPolygon }: InteractiveMapProps) => {
     const map = useMap();
     const drawnLayerRef = useRef<L.Layer | null>(null);
 
@@ -58,33 +59,28 @@ const MapController = ({ onAreaChange, onPolygonChange, siteType }: InteractiveM
             removalMode: true,
         });
 
-        map.pm.setGlobalOptions({
-            pathOptions: {
-                color: SITE_COLORS[siteType] || '#10b981',
-                fillColor: SITE_COLORS[siteType] || '#10b981',
-                fillOpacity: 0.4,
-            }
-        });
-
+        // Event listeners
         const handleCreate = (e: any) => {
             const { layer } = e;
 
             // If there's already a drawn layer, remove it (only one site per submission)
-            if (drawnLayerRef.current) {
+            if (drawnLayerRef.current && drawnLayerRef.current !== layer) {
                 map.removeLayer(drawnLayerRef.current);
             }
 
             drawnLayerRef.current = layer;
-            updateCalculations(layer);
 
-            layer.on('pm:edit', () => updateCalculations(layer));
-        };
-
-        const updateCalculations = (layer: any) => {
             const geoJson = layer.toGeoJSON();
             const area = turf.area(geoJson);
             onAreaChange(area);
             onPolygonChange(geoJson);
+
+            layer.on('pm:edit', () => {
+                const geoJson = layer.toGeoJSON();
+                const area = turf.area(geoJson);
+                onAreaChange(area);
+                onPolygonChange(geoJson);
+            });
         };
 
         map.on('pm:create', handleCreate);
@@ -98,6 +94,54 @@ const MapController = ({ onAreaChange, onPolygonChange, siteType }: InteractiveM
             map.off('pm:create', handleCreate);
             map.pm.removeControls();
         };
+    }, [map]);
+
+    // Handle initial polygon
+    useEffect(() => {
+        if (!map || !initialPolygon || drawnLayerRef.current) return;
+
+        // Create a GeoJSON layer
+        const layerGroup = L.geoJSON(initialPolygon, {
+            style: {
+                color: SITE_COLORS[siteType] || '#10b981',
+                fillColor: SITE_COLORS[siteType] || '#10b981',
+                fillOpacity: 0.4,
+            }
+        });
+
+        const layer = layerGroup.getLayers()[0] as L.Path;
+        if (layer) {
+            layer.addTo(map);
+            drawnLayerRef.current = layer;
+
+            // @ts-ignore
+            L.PM.reInitLayer(layer);
+
+            // @ts-ignore
+            layer.on('pm:edit', () => {
+                const geoJson = (layer as any).toGeoJSON();
+                const area = turf.area(geoJson);
+                onAreaChange(area);
+                onPolygonChange(geoJson);
+            });
+
+            if ((layer as L.Polygon).getBounds) {
+                map.fitBounds((layer as L.Polygon).getBounds(), { padding: [50, 50], maxZoom: 16 });
+            }
+        }
+    }, [map, initialPolygon]);
+
+    // Update global options when siteType changes
+    useEffect(() => {
+        if (!map) return;
+
+        map.pm.setGlobalOptions({
+            pathOptions: {
+                color: SITE_COLORS[siteType] || '#10b981',
+                fillColor: SITE_COLORS[siteType] || '#10b981',
+                fillOpacity: 0.4,
+            }
+        });
     }, [map, siteType]);
 
     // Update color of existing polygon if site type changes
