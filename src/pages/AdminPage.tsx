@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Check, X, Clock, MapPin, Ruler, ExternalLink, User, Calendar, Download, Trash2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, GeoJSON, Popup, LayersControl } from 'react-leaflet';
 import * as turf from '@turf/turf';
 import 'leaflet/dist/leaflet.css';
@@ -15,9 +15,11 @@ const AdminPage = () => {
         fetchSites();
     }, []);
 
+    const navigate = useNavigate();
+
     const handleEdit = (id: string) => {
         // Navigate to map page with edit mode
-        window.location.href = `/map/${id}`;
+        navigate(`/map/${encodeURIComponent(id)}`);
     };
 
     const fetchSites = async () => {

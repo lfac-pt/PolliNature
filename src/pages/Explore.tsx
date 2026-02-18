@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, GeoJSON, Popup, CircleMarker, useMapEvents, LayersControl } from 'react-leaflet';
 import * as turf from '@turf/turf';
 import { supabase } from '../lib/supabase';
@@ -256,13 +257,13 @@ const SitePopupContent = ({ site, user }: { site: any, user: any }) => (
         {/* Action Buttons */}
         <div className="flex flex-col gap-2 mt-4">
             {user && (user.id === site.user_id || ['lfac.pt@gmail.com', 'jloureiro@uc.pt'].includes(user.email || '')) && (
-                <a
-                    href={`/map/${site.id}`}
+                <Link
+                    to={`/map/${encodeURIComponent(site.id)}`}
                     className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-xs font-bold transition-colors"
                 >
                     <Leaf size={14} />
                     Editar Local
-                </a>
+                </Link>
             )}
 
             {site.website_url && (
