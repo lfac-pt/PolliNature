@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Check, X, Clock, MapPin, Ruler, ExternalLink, User, Calendar } from 'lucide-react';
+import { Check, X, Clock, MapPin, Ruler, ExternalLink, User, Calendar, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, GeoJSON, Popup, LayersControl } from 'react-leaflet';
 import * as turf from '@turf/turf';
@@ -57,6 +57,64 @@ const AdminPage = () => {
         }
     };
 
+    const handleExportCSV = () => {
+        if (!sites || sites.length === 0) return;
+
+        // Define columns
+        const headers = [
+            'ID', 'Nome', 'Tipo', 'Subtipo', 'Outro Tipo',
+            'Area (m2)', 'Status', 'Data Criacao', 'Data Inicio', 'Data Fim',
+            'Nome Autor', 'Autor Publico', 'Website',
+            'Acoes Realizadas', 'Outras Acoes',
+            'Localizacao (GeoJSON)', 'User ID'
+        ];
+
+        // Helper to escape CSV fields
+        const escapeCsv = (str: any) => {
+            if (str === null || str === undefined) return '';
+            const stringValue = String(str);
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+                return `"${stringValue.replace(/"/g, '""')}"`;
+            }
+            return stringValue;
+        };
+
+        // Map sites to rows
+        const rows = sites.map(site => [
+            site.id,
+            site.name,
+            site.site_type,
+            site.site_subtype,
+            site.site_type_other,
+            site.area_sqm,
+            site.status,
+            site.created_at,
+            site.start_date,
+            site.end_date,
+            site.author_name,
+            site.show_author,
+            site.website_url,
+            site.actions_taken?.join('; '),
+            site.actions_other,
+            JSON.stringify(site.location),
+            site.user_id
+        ].map(escapeCsv).join(','));
+
+        // Combine headers and rows
+        const csvContent = [headers.join(','), ...rows].join('\n');
+
+        // Create download link
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `pollinature_sites_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     if (loading) {
         return <div className="p-20 text-center text-slate-500">A carregar registos...</div>;
     }
@@ -68,10 +126,20 @@ const AdminPage = () => {
                     <h1 className="text-4xl mb-2">Painel de Validação</h1>
                     <p className="text-slate-500">Existem {sites.filter(s => s.status === 'pending').length} registos pendentes.</p>
                 </div>
-                <Link to="/explore" className="btn-secondary flex items-center gap-2">
-                    <ExternalLink size={18} />
-                    Ver Mapa Público
-                </Link>
+                <div className="flex gap-3">
+                    <button
+                        onClick={handleExportCSV}
+                        className="btn-secondary flex items-center gap-2"
+                        title="Exporta todos os registos da base de dados (Validados e Pendentes)"
+                    >
+                        <Download size={18} />
+                        Exportar Todos (CSV)
+                    </button>
+                    <Link to="/explore" className="btn-secondary flex items-center gap-2">
+                        <ExternalLink size={18} />
+                        Ver Mapa Público
+                    </Link>
+                </div>
             </div>
 
             <div className="h-96 rounded-3xl overflow-hidden mb-10 border border-slate-200 shadow-sm relative z-0">
