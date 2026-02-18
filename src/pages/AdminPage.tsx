@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Check, X, Clock, MapPin, Ruler, ExternalLink, User, Calendar, Download } from 'lucide-react';
+import { Check, X, Clock, MapPin, Ruler, ExternalLink, User, Calendar, Download, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, GeoJSON, Popup, LayersControl } from 'react-leaflet';
 import * as turf from '@turf/turf';
@@ -54,6 +54,26 @@ const AdminPage = () => {
             setSites(sites.map(s => s.id === id ? { ...s, status: newStatus } : s));
         } else {
             alert('Erro ao atualizar status. Verifique se tem permissões de Admin.');
+        }
+    };
+
+    const handleDeleteSite = async (id: string, name: string) => {
+        if (!confirm(`Tem a certeza que deseja eliminar o local "${name}"? Esta ação não pode ser desfeita.`)) {
+            return;
+        }
+
+        const { error } = await supabase
+            .from('sites')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting site:', error);
+            alert('Erro ao eliminar o local. Verifique as permissões.');
+        } else {
+            setSites(sites.filter(s => s.id !== id));
+            // Also try to delete image if exists (optional, but good practice to clean up)
+            await supabase.storage.from('site_images').remove([`sites/${id}.jpg`]);
         }
     };
 
@@ -245,6 +265,13 @@ const AdminPage = () => {
                                         className="h-12 px-4 rounded-2xl bg-slate-50 text-slate-400 font-medium text-sm hover:text-slate-600 transition-colors"
                                     >
                                         Mover para Pendente
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteSite(site.id, site.name || 'Sem nome')}
+                                        className="h-12 w-12 rounded-2xl bg-slate-100 text-red-500 flex items-center justify-center hover:bg-red-50 transition-colors"
+                                        title="Eliminar"
+                                    >
+                                        <Trash2 size={20} />
                                     </button>
                                 </>
                             )}
