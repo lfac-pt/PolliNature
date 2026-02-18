@@ -255,7 +255,8 @@ const MapPage = () => {
                 website_url: websiteUrl,
                 start_date: startDate,
                 end_date: endDate || null,
-                user_id: user.id,
+                // Only set user_id for new sites (preserve owner on edit)
+                ...(!id ? { user_id: user.id } : {}),
                 // Preserve status on edit, set to pending on create
                 ...(!id ? { status: 'pending' } : {}),
                 ...((!imageFile && !imagePreview) ? { image_url: null } : {})
