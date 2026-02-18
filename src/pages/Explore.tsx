@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, GeoJSON, Popup, CircleMarker, useMapEvents, LayersControl } from 'react-leaflet';
 import * as turf from '@turf/turf';
 import { supabase } from '../lib/supabase';
@@ -181,105 +181,109 @@ const MapContent = ({ sites, user }: { sites: any[], user: any }) => {
     );
 };
 
-const SitePopupContent = ({ site, user }: { site: any, user: any }) => (
-    <div className="p-1 min-w-[200px]">
-        {site.image_url && (
-            <div className="mb-3 rounded-lg overflow-hidden h-32 w-full relative bg-slate-100">
-                <img
-                    src={site.image_url}
-                    alt={site.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                />
-            </div>
-        )}
-        <div className="flex items-center justify-between mb-2 pb-2 border-b">
-            <h3 className="text-lg font-bold text-slate-900">{site.name || 'Sem nome'}</h3>
-            {site.status === 'pending' && (
-                <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold uppercase rounded-full tracking-wider border border-amber-200">
-                    Pendente
-                </span>
-            )}
-        </div>
+const SitePopupContent = ({ site, user }: { site: any, user: any }) => {
+    const navigate = useNavigate();
 
-        <div className="space-y-2 mb-4">
-            <div className="flex items-start gap-2 text-slate-600">
-                <MapPin size={14} className="text-primary mt-0.5" />
-                <div className="flex flex-col">
-                    <span className="text-xs font-medium uppercase tracking-wide">
-                        {SITE_LABELS[site.site_type] || site.site_type}
-                        {site.site_type === 'other' && site.site_type_other && ` - ${site.site_type_other}`}
-                    </span>
-                    {site.site_subtype && (
-                        <span className="text-xs text-slate-500 italic">
-                            {site.site_subtype}
-                        </span>
-                    )}
-                </div>
-            </div>
-            <div className="flex items-center gap-2 text-slate-600">
-                <Ruler size={14} className="text-secondary" />
-                <span className="text-xs font-bold">{site.area_sqm?.toFixed(1)} m²</span>
-            </div>
-            {site.start_date && (
-                <div className="flex items-center gap-2 text-slate-600">
-                    <span className="text-xs">
-                        {site.end_date
-                            ? `Período: ${new Date(site.start_date).toLocaleDateString()} - ${new Date(site.end_date).toLocaleDateString()}`
-                            : `Desde: ${new Date(site.start_date).toLocaleDateString()}`
-                        }
-                    </span>
+    return (
+        <div className="p-1 min-w-[200px]">
+            {site.image_url && (
+                <div className="mb-3 rounded-lg overflow-hidden h-32 w-full relative bg-slate-100">
+                    <img
+                        src={site.image_url}
+                        alt={site.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                    />
                 </div>
             )}
-            {site.show_author && site.author_name && (
-                <div className="flex items-center gap-2 text-slate-600 border-t pt-2 mt-2">
-                    <User size={14} className="text-slate-400" />
-                    <span className="text-xs italic">Criado por {site.author_name}</span>
-                </div>
-            )}
-        </div>
+            <div className="flex items-center justify-between mb-2 pb-2 border-b">
+                <h3 className="text-lg font-bold text-slate-900">{site.name || 'Sem nome'}</h3>
+                {site.status === 'pending' && (
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold uppercase rounded-full tracking-wider border border-amber-200">
+                        Pendente
+                    </span>
+                )}
+            </div>
 
-        {site.actions_taken && site.actions_taken.length > 0 && (
             <div className="space-y-2 mb-4">
-                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Ações Realizadas</p>
-                <div className="flex flex-wrap gap-1">
-                    {site.actions_taken.map((action: string) => (
-                        <span key={action} className="px-1.5 py-0.5 bg-nature-50 text-primary-dark rounded text-[10px] font-medium border border-nature-100">
-                            {action === 'other' && site.actions_other ? site.actions_other : (ACTION_LABELS[action] || action)}
+                <div className="flex items-start gap-2 text-slate-600">
+                    <MapPin size={14} className="text-primary mt-0.5" />
+                    <div className="flex flex-col">
+                        <span className="text-xs font-medium uppercase tracking-wide">
+                            {SITE_LABELS[site.site_type] || site.site_type}
+                            {site.site_type === 'other' && site.site_type_other && ` - ${site.site_type_other}`}
                         </span>
-                    ))}
+                        {site.site_subtype && (
+                            <span className="text-xs text-slate-500 italic">
+                                {site.site_subtype}
+                            </span>
+                        )}
+                    </div>
                 </div>
+                <div className="flex items-center gap-2 text-slate-600">
+                    <Ruler size={14} className="text-secondary" />
+                    <span className="text-xs font-bold">{site.area_sqm?.toFixed(1)} m²</span>
+                </div>
+                {site.start_date && (
+                    <div className="flex items-center gap-2 text-slate-600">
+                        <span className="text-xs">
+                            {site.end_date
+                                ? `Período: ${new Date(site.start_date).toLocaleDateString()} - ${new Date(site.end_date).toLocaleDateString()}`
+                                : `Desde: ${new Date(site.start_date).toLocaleDateString()}`
+                            }
+                        </span>
+                    </div>
+                )}
+                {site.show_author && site.author_name && (
+                    <div className="flex items-center gap-2 text-slate-600 border-t pt-2 mt-2">
+                        <User size={14} className="text-slate-400" />
+                        <span className="text-xs italic">Criado por {site.author_name}</span>
+                    </div>
+                )}
             </div>
-        )}
 
-        {/* Action Buttons */}
-        <div className="flex flex-col gap-2 mt-4">
-            {user && (user.id === site.user_id || ['lfac.pt@gmail.com', 'jloureiro@uc.pt'].includes(user.email || '')) && (
-                <Link
-                    to={`/map/${encodeURIComponent(site.id)}`}
-                    className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-xs font-bold transition-colors"
-                >
-                    <Leaf size={14} />
-                    Editar Local
-                </Link>
+            {site.actions_taken && site.actions_taken.length > 0 && (
+                <div className="space-y-2 mb-4">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Ações Realizadas</p>
+                    <div className="flex flex-wrap gap-1">
+                        {site.actions_taken.map((action: string) => (
+                            <span key={action} className="px-1.5 py-0.5 bg-nature-50 text-primary-dark rounded text-[10px] font-medium border border-nature-100">
+                                {action === 'other' && site.actions_other ? site.actions_other : (ACTION_LABELS[action] || action)}
+                            </span>
+                        ))}
+                    </div>
+                </div>
             )}
 
-            {site.website_url && (
-                <a
-                    href={site.website_url.startsWith('http') ? site.website_url : `https://${site.website_url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg text-xs font-bold transition-colors"
-                >
-                    <ExternalLink size={14} />
-                    Visitar Website
-                </a>
-            )}
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-2 mt-4">
+                {user && (user.id === site.user_id || ['lfac.pt@gmail.com', 'jloureiro@uc.pt'].includes(user.email || '')) && (
+                    <button
+                        onClick={() => navigate(`/map/${encodeURIComponent(site.id)}`)}
+                        className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                    >
+                        <Leaf size={14} />
+                        Editar Local
+                    </button>
+                )}
+
+                {site.website_url && (
+                    <a
+                        href={site.website_url.startsWith('http') ? site.website_url : `https://${site.website_url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg text-xs font-bold transition-colors"
+                    >
+                        <ExternalLink size={14} />
+                        Visitar Website
+                    </a>
+                )}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const StatsCard = ({ label, value, icon }: { label: string, value: string, icon: React.ReactNode }) => (
     <div className="flex-1 glass-panel p-4 flex items-center gap-4">
