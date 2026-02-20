@@ -25,7 +25,13 @@ const AuthPage = () => {
                 if (error) throw error;
                 navigate(from, { replace: true });
             } else {
-                const { error } = await supabase.auth.signUp({ email, password });
+                const { error } = await supabase.auth.signUp({ 
+                    email, 
+                    password,
+                    options: {
+                        emailRedirectTo: window.location.origin + window.location.pathname
+                    }
+                });
                 if (error) throw error;
                 alert('Verifique o seu email para confirmar o registo!');
                 setIsLogin(true);
