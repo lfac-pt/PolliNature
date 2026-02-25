@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { InteractiveMap } from '../components/Map/InteractiveMap';
 import { supabase } from '../lib/supabase';
-import { useNavigate, useParams } from 'react-router-dom';
-import { MoveRight, MapPin, Ruler, CheckCircle2, Info, Upload, X } from 'lucide-react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { MoveRight, MapPin, Ruler, CheckCircle2, Info, Upload, X, UserPlus } from 'lucide-react';
 import { resizeImage } from '../utils/imageUtils';
+import { useAuth } from '../lib/AuthContext';
 
 const MapPage = () => {
     const { id } = useParams();
+    const { user, loading: authLoading } = useAuth();
     const [area, setArea] = useState(0);
     const [polygon, setPolygon] = useState<any>(null);
     const [initialPolygon, setInitialPolygon] = useState<any>(null);
@@ -321,10 +323,46 @@ const MapPage = () => {
         }
     };
 
-    if (isLoading) {
+    if (isLoading || authLoading) {
         return (
             <div className="flex h-screen items-center justify-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return (
+            <div className="flex h-[calc(100vh-64px)] items-center justify-center bg-slate-50 relative overflow-hidden">
+                <div className="max-w-md w-full mx-auto bg-white p-10 rounded-3xl shadow-xl border border-nature-100 text-center relative z-10 mx-4">
+                    <div className="w-20 h-20 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <UserPlus size={40} />
+                    </div>
+                    <h1 className="text-3xl mb-4 text-slate-900">Necessário Registo</h1>
+                    <p className="text-slate-600 mb-8 leading-relaxed">
+                        Para mapear a sua intervenção e preencher os dados, é necessário criar uma conta ou iniciar sessão. Isto garante que não perde o que mapeou e que o registo fica associado a si.
+                    </p>
+                    <div className="flex flex-col gap-3">
+                        <Link
+                            to="/register"
+                            className="btn-primary w-full py-3"
+                        >
+                            Criar Conta
+                        </Link>
+                        <Link
+                            to="/login"
+                            className="w-full py-3 px-6 rounded-xl font-semibold border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                            Já tenho conta (Entrar)
+                        </Link>
+                        <Link
+                            to="/"
+                            className="mt-4 text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                        >
+                            Voltar ao início
+                        </Link>
+                    </div>
+                </div>
             </div>
         );
     }

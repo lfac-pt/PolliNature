@@ -1,5 +1,5 @@
 import React from 'react';
-import { Leaf, Map as MapIcon, ShieldCheck, BarChart3 } from 'lucide-react';
+import { Leaf, Map as MapIcon, ShieldCheck, BarChart3, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -73,7 +73,12 @@ const Home = () => {
                             Simples, transparente e impacto real para os ecossistemas locais.
                         </p>
                     </div>
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <FeatureCard
+                            icon={<UserPlus className="text-secondary" />}
+                            title="Registo"
+                            description="Crie uma conta para garantir que os seus mapeamentos ficam guardados e associados ao seu perfil."
+                        />
                         <FeatureCard
                             icon={<MapIcon className="text-primary" />}
                             title="Mapeamento"
