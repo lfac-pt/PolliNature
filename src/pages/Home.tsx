@@ -1,7 +1,8 @@
 import React from 'react';
 import { Leaf, Map as MapIcon, ShieldCheck, BarChart3, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import photo5 from '../assets/photos/photo5.webp';
+import photo6 from '../assets/photos/photo6.webp';
 const Home = () => {
     return (
         <div className="relative overflow-hidden bg-white">
@@ -46,14 +47,14 @@ const Home = () => {
                                 {/* Circular image masks inspired by pollinet.pt */}
                                 <div className="absolute inset-0 rounded-full border-4 border-nature-200 overflow-hidden shadow-2xl transform rotate-3 scale-95">
                                     <img
-                                        src="https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?auto=format&fit=crop&q=80&w=800"
+                                        src={photo5}
                                         alt="Natureza"
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
                                 <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full border-4 border-amber-100 overflow-hidden shadow-xl transform -rotate-6">
                                     <img
-                                        src="https://images.unsplash.com/photo-1558509374-95411707ef4c?auto=format&fit=crop&q=80&w=400"
+                                        src={photo6}
                                         alt="Polinizador"
                                         className="w-full h-full object-cover"
                                     />

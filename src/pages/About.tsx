@@ -1,4 +1,8 @@
 import { Users, Shield, Target } from 'lucide-react';
+import photo1 from '../assets/photos/photo1.webp';
+import photo2 from '../assets/photos/photo2.webp';
+import photo3 from '../assets/photos/photo3.webp';
+import photo4 from '../assets/photos/photo4.webp';
 
 const About = () => {
     return (
@@ -49,18 +53,18 @@ const About = () => {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-4 pt-12">
                                 <div className="h-64 rounded-3xl overflow-hidden shadow-lg border-2 border-primary/10">
-                                    <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover" alt="Garden" />
+                                    <img src={photo1} className="w-full h-full object-cover" alt="Garden" />
                                 </div>
                                 <div className="h-48 rounded-3xl overflow-hidden shadow-lg border-2 border-secondary/10">
-                                    <img src="https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover" alt="Pollinator" />
+                                    <img src={photo2} className="w-full h-full object-cover" alt="Pollinator" />
                                 </div>
                             </div>
                             <div className="space-y-4">
                                 <div className="h-48 rounded-3xl overflow-hidden shadow-lg border-2 border-secondary/10">
-                                    <img src="https://images.unsplash.com/photo-1464454709131-ffd692591ee5?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover" alt="Strawberries" />
+                                    <img src={photo3} className="w-full h-full object-cover" alt="Strawberries" />
                                 </div>
                                 <div className="h-64 rounded-3xl overflow-hidden shadow-lg border-2 border-primary/10">
-                                    <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover" alt="Nature" />
+                                    <img src={photo4} className="w-full h-full object-cover" alt="Nature" />
                                 </div>
                             </div>
                         </div>
