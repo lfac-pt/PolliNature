@@ -23,13 +23,13 @@ const Home = () => {
                         <div className="flex-1 text-center lg:text-left">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-nature-100 text-primary-dark font-medium text-sm mb-6">
                                 <Leaf size={16} />
-                                <span>Restaurar a Natureza em Coimbra</span>
+                                <span>Por uma Coimbra mais conectada, biodiversa e cheia de polinizadores</span>
                             </div>
                             <h1 className="text-5xl lg:text-7xl mb-6 text-slate-900 leading-tight">
-                                Dê vida ao seu <span className="text-primary">Jardim</span> e ajude a <span className="text-secondary">Biodiversidade</span>
+                                Dê vida ao seu <span className="text-primary">Jardim</span> e ajude os <span className="text-secondary">Polinizadores</span>
                             </h1>
                             <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto lg:mx-0">
-                                O projeto Poll&Nature incentiva o restauro da natureza em Coimbra. Mapeie a sua intervenção, calcule a área recuperada e inspire outros a fazer o mesmo.
+                                O projeto Poll&Nature tem como objetivo incentivar o mapeamento de ações amigas dos polinizadores no concelho de Coimbra. Cada jardim, cada horta, cada espaço verde conta. Registe a sua ação e ajude a construir uma cidade mais conectada, mais resiliente e mais biodiversa.
                             </p>
                             <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                                 <Link to="/map" className="btn-primary flex items-center gap-2">
@@ -70,29 +70,29 @@ const Home = () => {
                     <div className="text-center mb-16">
                         <h2 className="text-4xl mb-4">Como funciona?</h2>
                         <p className="text-slate-600 max-w-2xl mx-auto">
-                            Simples, transparente e impacto real para os ecossistemas locais.
+                            Simples, transparente e com impacto real na biodiversidade urbana.
                         </p>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         <FeatureCard
                             icon={<UserPlus className="text-secondary" />}
                             title="Registo"
-                            description="Crie uma conta para garantir que os seus mapeamentos ficam guardados e associados ao seu perfil."
+                            description="Crie a sua conta antes de iniciar o processo. O registo é obrigatório e permite guardar a informação submetida, garantir a rastreabilidade dos dados e assegurar a qualidade do projeto."
                         />
                         <FeatureCard
                             icon={<MapIcon className="text-primary" />}
                             title="Mapeamento"
-                            description="Desenhe os limites da sua intervenção no nosso mapa interativo e veja a área calculada automaticamente."
+                            description="Desenhe no mapa interativo os limites do seu espaço verde. A área é calculada automaticamente e pode indicar a tipologia do local e as ações implementadas."
                         />
                         <FeatureCard
                             icon={<ShieldCheck className="text-secondary" />}
                             title="Validação"
-                            description="A nossa equipa valida todos os registos para garantir a qualidade dos dados e transparência do projeto."
+                            description="A nossa equipa analisa e valida todos os registos, assegurando consistência, transparência e rigor científico."
                         />
                         <FeatureCard
                             icon={<BarChart3 className="text-primary" />}
-                            title="Impacto Local"
-                            description="Acompanhe o crescimento da rede de restauro no concelho de Coimbra e o aumento das áreas amigas dos polinizadores."
+                            title="Impacto local"
+                            description="Acompanhe o crescimento da rede de espaços amigos dos polinizadores no concelho de Coimbra. Cada nova ação reforça a conectividade ecológica urbana e contribui para uma cidade mais biodiversa e resiliente."
                         />
                     </div>
                 </div>

@@ -11,6 +11,7 @@ import { AuthProvider } from './lib/AuthContext';
 
 const App = () => {
   const basename = process.env.NODE_ENV === 'production' ? '/PolliNature' : '';
+  const getImgPath = (path: string) => process.env.NODE_ENV === 'production' ? `/PolliNature${path}` : path;
 
   return (
     <AuthProvider>
@@ -32,37 +33,61 @@ const App = () => {
 
           <footer className="bg-slate-900 text-white py-16">
             <div className="container mx-auto px-6">
-              <div className="grid md:grid-cols-4 gap-12">
-                <div className="col-span-2">
-                  <div className="flex items-center gap-2 mb-6">
+              <div className="grid md:grid-cols-12 gap-12 mb-16">
+                <div className="md:col-span-5 relative">
+                  <div className="absolute top-0 left-0 w-64 h-64 bg-primary/20 blur-[100px] rounded-full pointer-events-none" />
+                  <div className="flex items-center gap-2 mb-6 relative">
                     <Leaf className="text-primary" size={32} />
                     <span className="text-2xl font-display font-bold">Poll&Nature</span>
                   </div>
-                  <p className="text-slate-400 max-w-sm mb-6">
-                    Uma iniciativa para o restauro da natureza em jardins e quintais de Coimbra.
-                    Inspirado pelo All-Ireland Pollinator Plan.
+                  <p className="text-slate-300 mb-8 leading-relaxed relative text-lg">
+                    Uma iniciativa para fortalecer a rede urbana de espaços amigos dos polinizadores em
+                    Coimbra, inspirada em boas práticas internacionais de planeamento para polinizadores
+                    e desenvolvida no âmbito do projeto BeeConnected SUDOE.
                   </p>
-                  <div className="flex gap-4">
-                    {/* Social links placeholder */}
+                  <div className="space-y-3 text-slate-300 relative text-sm">
+                    <p className="flex items-center gap-2">
+                      <span className="font-bold text-white uppercase tracking-wider text-[10px] w-28 shrink-0">E-mail</span>
+                      <a href="mailto:flowerlab@uc.pt" className="hover:text-primary transition-colors text-base font-medium">flowerlab@uc.pt</a>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="font-bold text-white uppercase tracking-wider text-[10px] w-28 shrink-0">Conceção e design</span>
+                      <span className="text-base font-medium">Luís Cardoso</span>
+                    </p>
                   </div>
                 </div>
-                <div>
-                  <h4 className="font-bold mb-6 italic">Links Rápidos</h4>
-                  <ul className="space-y-4 text-slate-400">
+
+                <div className="md:col-span-3">
+                  <h4 className="font-bold mb-6 text-lg">Links Rápidos</h4>
+                  <ul className="space-y-4 text-slate-300">
                     <li><Link to="/" className="hover:text-primary transition-colors">Início</Link></li>
-                    <li><Link to="/map" className="hover:text-primary transition-colors">Mapa Publico</Link></li>
-                    <li><Link to="/register" className="hover:text-primary transition-colors">Registrar Local</Link></li>
+                    <li><Link to="/explore" className="hover:text-primary transition-colors">Mapa Público</Link></li>
+                    <li><Link to="/map" className="hover:text-primary transition-colors">Participar / Começar Mapeamento</Link></li>
+                    <li><Link to="/about" className="hover:text-primary transition-colors">Sobre o Projeto</Link></li>
                   </ul>
                 </div>
-                <div>
-                  <h4 className="font-bold mb-6 italic">Documentação</h4>
-                  <ul className="space-y-4 text-slate-400">
-                    <li><a href="https://pollinators.ie" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">Polinators Plan (Ireland)</a></li>
-                    <li><a href="https://www.pollinet.pt/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">PolliNet.pt</a></li>
-                  </ul>
+
+                <div className="md:col-span-4">
+                  <h4 className="font-bold mb-6 text-lg">Parceiros e Apoios</h4>
+                  <div className="bg-white rounded-3xl p-6 shadow-xl flex flex-wrap items-center justify-center gap-5">
+                    <img src={getImgPath("/logos/flower-lab.webp")} alt="FLOWer Lab" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    <img src={getImgPath("/logos/borboletas_de_coimbra_logo.webp")} alt="Borboletas de Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    <img src={getImgPath("/logos/cfe.webp")} alt="Centre for Functional Ecology" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    <img src={getImgPath("/logos/uc.webp")} alt="Universidade de Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    <img src={getImgPath("/logos/pollinet.webp")} alt="polli.NET" className="h-9 object-contain hover:scale-105 transition-transform" />
+                    <img src={getImgPath("/logos/beeconnected.webp")} alt="BeeConnected SUDOE" className="h-14 object-contain hover:scale-105 transition-transform" />
+
+                    <div className="w-full h-px bg-slate-100 my-2" />
+
+                    <div className="text-center w-full">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Outros Apoios</span>
+                      <span className="text-sm font-semibold text-slate-700">Jardim Monte Formoso e/ou São Flores • Coimbra</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="border-t border-slate-800 mt-16 pt-8 text-center text-slate-500 text-sm">
+
+              <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between text-slate-500 text-sm">
                 <p>&copy; {new Date().getFullYear()} Poll&Nature Coimbra. Todos os direitos reservados.</p>
               </div>
             </div>
