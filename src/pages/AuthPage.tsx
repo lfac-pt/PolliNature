@@ -25,8 +25,8 @@ const AuthPage = () => {
                 if (error) throw error;
                 navigate(from, { replace: true });
             } else {
-                const { error } = await supabase.auth.signUp({ 
-                    email, 
+                const { error } = await supabase.auth.signUp({
+                    email,
                     password,
                     options: {
                         emailRedirectTo: window.location.origin + window.location.pathname
@@ -58,7 +58,7 @@ const AuthPage = () => {
                     <p className="text-slate-500">
                         {isLogin
                             ? 'Entre para gerir as suas ações de restauro.'
-                            : 'Junte-se à comunidade PolliNature em Coimbra.'}
+                            : 'Junte-se à comunidade Poll&Nature em Coimbra.'}
                     </p>
                 </div>
 

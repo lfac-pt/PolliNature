@@ -1,6 +1,6 @@
-# PolliNature - Project Context
+# Poll&Nature - Project Context
 
-PolliNature is a community-driven initiative to encourage and map nature restoration actions in gardens and backyards in Coimbra, Portugal.
+Poll&Nature is a community-driven initiative to encourage and map nature restoration actions in gardens and backyards in Coimbra, Portugal.
 
 ## Tech Stack
 - **Frontend**: React 19, TypeScript, Rsbuild.

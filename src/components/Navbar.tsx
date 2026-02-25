@@ -18,7 +18,7 @@ const Navbar = () => {
                         <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform">
                             <Leaf size={24} />
                         </div>
-                        <span className="text-xl font-display font-bold text-slate-900 tracking-tight">PolliNature</span>
+                        <span className="text-xl font-display font-bold text-slate-900 tracking-tight">Poll&Nature</span>
                     </Link>
 
                     <div className="hidden md:flex items-center gap-8">

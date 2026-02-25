@@ -36,7 +36,7 @@ const App = () => {
                 <div className="col-span-2">
                   <div className="flex items-center gap-2 mb-6">
                     <Leaf className="text-primary" size={32} />
-                    <span className="text-2xl font-display font-bold">PolliNature</span>
+                    <span className="text-2xl font-display font-bold">Poll&Nature</span>
                   </div>
                   <p className="text-slate-400 max-w-sm mb-6">
                     Uma iniciativa para o restauro da natureza em jardins e quintais de Coimbra.
@@ -63,7 +63,7 @@ const App = () => {
                 </div>
               </div>
               <div className="border-t border-slate-800 mt-16 pt-8 text-center text-slate-500 text-sm">
-                <p>&copy; {new Date().getFullYear()} PolliNature Coimbra. Todos os direitos reservados.</p>
+                <p>&copy; {new Date().getFullYear()} Poll&Nature Coimbra. Todos os direitos reservados.</p>
               </div>
             </div>
           </footer>

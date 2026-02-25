@@ -5,7 +5,7 @@ const About = () => {
         <div className="bg-white min-h-screen">
             <section className="py-20 bg-nature-50">
                 <div className="container mx-auto px-6 text-center">
-                    <h1 className="text-5xl lg:text-6xl mb-6">Sobre o <span className="text-primary">PolliNature</span></h1>
+                    <h1 className="text-5xl lg:text-6xl mb-6">Sobre o <span className="text-primary">Poll&Nature</span></h1>
                     <p className="text-xl text-slate-600 max-w-3xl mx-auto">
                         Uma iniciativa focada no restauro ecológico urbano, incentivando cidadãos a transformar os seus espaços em refúgios para a biodiversidade.
                     </p>

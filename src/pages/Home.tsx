@@ -29,7 +29,7 @@ const Home = () => {
                                 Dê vida ao seu <span className="text-primary">Jardim</span> e ajude a <span className="text-secondary">Biodiversidade</span>
                             </h1>
                             <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto lg:mx-0">
-                                O projeto PolliNature incentiva o restauro da natureza em Coimbra. Mapeie a sua intervenção, calcule a área recuperada e inspire outros a fazer o mesmo.
+                                O projeto Poll&Nature incentiva o restauro da natureza em Coimbra. Mapeie a sua intervenção, calcule a área recuperada e inspire outros a fazer o mesmo.
                             </p>
                             <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                                 <Link to="/map" className="btn-primary flex items-center gap-2">
