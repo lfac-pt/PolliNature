@@ -6,6 +6,7 @@ import MapPage from './pages/MapPage';
 import About from './pages/About';
 import Explore from './pages/Explore';
 import WhatToDo from './pages/WhatToDo';
+import LearnMore from './pages/LearnMore';
 import AuthPage from './pages/AuthPage';
 import AdminPage from './pages/AdminPage';
 import { AuthProvider } from './lib/AuthContext';
@@ -26,6 +27,7 @@ const App = () => {
               <Route path="/map/:id" element={<MapPage />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/what-to-do" element={<WhatToDo />} />
+              <Route path="/learn-more" element={<LearnMore />} />
               <Route path="/about" element={<About />} />
               <Route path="/login" element={<AuthPage />} />
               <Route path="/register" element={<AuthPage />} />
@@ -67,6 +69,7 @@ const App = () => {
                     <li><Link to="/map" className="hover:text-primary transition-colors">Participar / Começar Mapeamento</Link></li>
                     <li><Link to="/what-to-do" className="hover:text-primary transition-colors">O que fazer?</Link></li>
                     <li><Link to="/about" className="hover:text-primary transition-colors">Sobre</Link></li>
+                    <li><Link to="/learn-more" className="hover:text-primary transition-colors">Para saber mais</Link></li>
                   </ul>
                 </div>
 

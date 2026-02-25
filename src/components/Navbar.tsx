@@ -21,11 +21,12 @@ const Navbar = () => {
                         <span className="text-xl font-display font-bold text-slate-900 tracking-tight">Poll&Nature</span>
                     </Link>
 
-                    <div className="hidden md:flex items-center gap-8">
+                    <div className="hidden lg:flex items-center gap-6">
                         <Link to="/" className="text-slate-600 hover:text-primary font-medium transition-colors">Início</Link>
                         <Link to="/what-to-do" className="text-slate-600 hover:text-primary font-medium transition-colors">O que fazer?</Link>
                         <Link to="/explore" className="text-slate-600 hover:text-primary font-medium transition-colors">Explorar</Link>
                         {user && <Link to="/admin" className="text-slate-600 hover:text-primary font-medium transition-colors">Validar</Link>}
+                        <Link to="/learn-more" className="text-slate-600 hover:text-primary font-medium transition-colors">Para saber mais</Link>
                         <Link to="/about" className="text-slate-600 hover:text-primary font-medium transition-colors">Sobre</Link>
                     </div>
 
@@ -57,7 +58,7 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
-        </nav>
+        </nav >
     );
 };
 
