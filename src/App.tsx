@@ -82,13 +82,7 @@ const App = () => {
                     <img src={getImgPath("/logos/uc.webp")} alt="Universidade de Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
                     <img src={getImgPath("/logos/pollinet.webp")} alt="polli.NET" className="h-9 object-contain hover:scale-105 transition-transform" />
                     <img src={getImgPath("/logos/beeconnected.webp")} alt="BeeConnected SUDOE" className="h-14 object-contain hover:scale-105 transition-transform" />
-
-                    <div className="w-full h-px bg-slate-100 my-2" />
-
-                    <div className="text-center w-full">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Outros Apoios</span>
-                      <span className="text-sm font-semibold text-slate-700">Jardim Monte Formoso e/ou São Flores • Coimbra</span>
-                    </div>
+                    <img src={getImgPath("/logos/sao-flores.webp")} alt="Jardim São Flores e Monte Formoso Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
                   </div>
                 </div>
               </div>
