@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import MapPage from './pages/MapPage';
 import About from './pages/About';
 import Explore from './pages/Explore';
+import WhatToDo from './pages/WhatToDo';
 import AuthPage from './pages/AuthPage';
 import AdminPage from './pages/AdminPage';
 import { AuthProvider } from './lib/AuthContext';
@@ -24,6 +25,7 @@ const App = () => {
               <Route path="/map" element={<MapPage />} />
               <Route path="/map/:id" element={<MapPage />} />
               <Route path="/explore" element={<Explore />} />
+              <Route path="/what-to-do" element={<WhatToDo />} />
               <Route path="/about" element={<About />} />
               <Route path="/login" element={<AuthPage />} />
               <Route path="/register" element={<AuthPage />} />
@@ -63,7 +65,8 @@ const App = () => {
                     <li><Link to="/" className="hover:text-primary transition-colors">Início</Link></li>
                     <li><Link to="/explore" className="hover:text-primary transition-colors">Mapa Público</Link></li>
                     <li><Link to="/map" className="hover:text-primary transition-colors">Participar / Começar Mapeamento</Link></li>
-                    <li><Link to="/about" className="hover:text-primary transition-colors">Sobre o Projeto</Link></li>
+                    <li><Link to="/what-to-do" className="hover:text-primary transition-colors">O que fazer?</Link></li>
+                    <li><Link to="/about" className="hover:text-primary transition-colors">Sobre</Link></li>
                   </ul>
                 </div>
 
