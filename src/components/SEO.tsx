@@ -10,7 +10,7 @@ interface SEOProps {
 
 const SEO = ({
     title = 'Poll&Nature',
-    description = 'Uma iniciativa para fortalecer a rede urbana de espaços amigos dos polinizadores em Coimbra, inspirada em boas práticas internacionais de planeamento para polinizadores.',
+    description = 'Uma iniciativa para fortalecer a rede urbana de espaços amigos dos polinizadores em Coimbra, inspirada em boas práticas internacionais de planeamento para polinizadores e desenvolvida pelo Centre for Functional Ecology da Universidade de Coimbra e Borboletas de Coimbra no âmbito do projeto BeeConnected SUDOE.',
     canonical = 'https://pollinature.pt',
     type = 'website',
     image = 'https://pollinature.pt/logos/borboletas_de_coimbra_logo.webp'

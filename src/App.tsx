@@ -45,9 +45,10 @@ const App = () => {
                     <span className="text-2xl font-display font-bold">Poll&Nature</span>
                   </div>
                   <p className="text-slate-300 mb-8 leading-relaxed relative text-lg">
-                    Uma iniciativa para fortalecer a rede urbana de espaços amigos dos polinizadores em
-                    Coimbra, inspirada em boas práticas internacionais de planeamento para polinizadores
-                    e desenvolvida no âmbito do projeto BeeConnected SUDOE.
+                    Uma iniciativa para fortalecer a rede urbana de espaços amigos dos polinizadores em Coimbra,
+                    inspirada em boas práticas internacionais de planeamento para polinizadores e desenvolvida
+                    pelo Centre for Functional Ecology da Universidade de Coimbra e Borboletas de Coimbra
+                    no âmbito do projeto BeeConnected SUDOE.
                   </p>
                   <div className="space-y-3 text-slate-300 relative text-sm">
                     <p className="flex items-center gap-2">
