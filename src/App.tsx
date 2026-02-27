@@ -12,8 +12,8 @@ import AdminPage from './pages/AdminPage';
 import { AuthProvider } from './lib/AuthContext';
 
 const App = () => {
-  const basename = process.env.NODE_ENV === 'production' ? '/PolliNature' : '';
-  const getImgPath = (path: string) => process.env.NODE_ENV === 'production' ? `/PolliNature${path}` : path;
+  const basename = '';
+  const getImgPath = (path: string) => path;
 
   return (
     <AuthProvider>

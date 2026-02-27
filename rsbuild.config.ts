@@ -22,6 +22,6 @@ export default defineConfig({
         : undefined,
   },
   output: {
-    assetPrefix: process.env.NODE_ENV === 'production' ? '/PolliNature/' : '/',
+    assetPrefix: '/',
   },
 });
