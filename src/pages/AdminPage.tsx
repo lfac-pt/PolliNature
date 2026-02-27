@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Check, X, Clock, MapPin, Ruler, ExternalLink, User, Calendar, Download, Trash2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../lib/AuthContext';
 import { MapContainer, TileLayer, GeoJSON, Popup, LayersControl } from 'react-leaflet';
 import * as turf from '@turf/turf';
 import 'leaflet/dist/leaflet.css';
@@ -9,15 +10,22 @@ import { SITE_COLORS, ACTION_LABELS } from '../constants/site';
 import SEO from '../components/SEO';
 
 const AdminPage = () => {
+    const { user, isAdmin, loading: authLoading } = useAuth();
     const [sites, setSites] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showPendingOnly, setShowPendingOnly] = useState(true);
 
-    useEffect(() => {
-        fetchSites();
-    }, []);
-
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!authLoading && !isAdmin) {
+            navigate('/', { replace: true });
+        } else if (isAdmin) {
+            fetchSites();
+        }
+    }, [isAdmin, authLoading, navigate]);
+
+
 
     const handleEdit = (id: string) => {
         // Navigate to map page with edit mode
@@ -139,7 +147,7 @@ const AdminPage = () => {
         document.body.removeChild(link);
     };
 
-    if (loading) {
+    if (authLoading || loading || !isAdmin) {
         return <div className="p-20 text-center text-slate-500">A carregar registos...</div>;
     }
 

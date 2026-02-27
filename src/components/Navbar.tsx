@@ -4,7 +4,7 @@ import { useAuth } from '../lib/AuthContext';
 import { supabase } from '../lib/supabase';
 
 const Navbar = () => {
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -27,7 +27,7 @@ const Navbar = () => {
                         <Link to="/what-to-do" className="text-slate-600 hover:text-primary font-medium transition-colors">O que fazer?</Link>
                         <Link to="/explore" className="text-slate-600 hover:text-primary font-medium transition-colors">Explorar</Link>
                         <Link to="/learn-more" className="text-slate-600 hover:text-primary font-medium transition-colors">Para saber mais</Link>
-                        {user && <Link to="/admin" className="text-slate-600 hover:text-primary font-medium transition-colors">Validar</Link>}
+                        {isAdmin && <Link to="/admin" className="text-slate-600 hover:text-primary font-medium transition-colors">Validar</Link>}
                     </div>
 
                     <div className="flex items-center gap-4">

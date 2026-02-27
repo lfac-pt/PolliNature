@@ -52,7 +52,7 @@ const MapPage = () => {
             if (error) throw error;
 
             /*
-            if (site.user_id !== user?.id && user?.email !== 'admin@pollinature.pt') {
+            if (site.user_id !== user?.id && !isAdmin) {
                 alert('Não tem permissão para editar este local.');
                 navigate('/explore');
                 return;
