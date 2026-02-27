@@ -77,13 +77,27 @@ const App = () => {
                 <div className="md:col-span-4">
                   <h4 className="font-bold mb-6 text-lg">Parceiros e Apoios</h4>
                   <div className="bg-white rounded-3xl p-6 shadow-xl flex flex-wrap items-center justify-center gap-5">
-                    <img src={getImgPath("/logos/flower-lab.webp")} alt="FLOWer Lab" className="h-10 object-contain hover:scale-105 transition-transform" />
-                    <img src={getImgPath("/logos/borboletas_de_coimbra_logo.webp")} alt="Borboletas de Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
-                    <img src={getImgPath("/logos/cfe.webp")} alt="Centre for Functional Ecology" className="h-10 object-contain hover:scale-105 transition-transform" />
-                    <img src={getImgPath("/logos/uc.webp")} alt="Universidade de Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
-                    <img src={getImgPath("/logos/pollinet.webp")} alt="polli.NET" className="h-9 object-contain hover:scale-105 transition-transform" />
-                    <img src={getImgPath("/logos/beeconnected.webp")} alt="BeeConnected SUDOE" className="h-14 object-contain hover:scale-105 transition-transform" />
-                    <img src={getImgPath("/logos/sao-flores.webp")} alt="Jardim São Flores e Monte Formoso Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    <a href="mailto:flowerlab@uc.pt" target="_blank" rel="noopener noreferrer">
+                      <img src={getImgPath("/logos/flower-lab.webp")} alt="FLOWer Lab" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    </a>
+                    <a href="https://borboletasdecoimbra.pt/" target="_blank" rel="noopener noreferrer">
+                      <img src={getImgPath("/logos/borboletas_de_coimbra_logo.webp")} alt="Borboletas de Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    </a>
+                    <a href="https://cfe.uc.pt/" target="_blank" rel="noopener noreferrer">
+                      <img src={getImgPath("/logos/cfe.webp")} alt="Centre for Functional Ecology" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    </a>
+                    <a href="https://www.uc.pt/" target="_blank" rel="noopener noreferrer">
+                      <img src={getImgPath("/logos/uc.webp")} alt="Universidade de Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    </a>
+                    <a href="https://pollinet.pt/" target="_blank" rel="noopener noreferrer">
+                      <img src={getImgPath("/logos/pollinet.webp")} alt="polli.NET" className="h-9 object-contain hover:scale-105 transition-transform" />
+                    </a>
+                    <a href="https://interreg-sudoe.eu/pt-pt/proyecto-interreg/beeconnected-sudoe/" target="_blank" rel="noopener noreferrer">
+                      <img src={getImgPath("/logos/beeconnected.webp")} alt="BeeConnected SUDOE" className="h-14 object-contain hover:scale-105 transition-transform" />
+                    </a>
+                    <a href="https://www.instagram.com/jardimmonteformoso/" target="_blank" rel="noopener noreferrer">
+                      <img src={getImgPath("/logos/sao-flores.webp")} alt="Jardim São Flores e Monte Formoso Coimbra" className="h-10 object-contain hover:scale-105 transition-transform" />
+                    </a>
                   </div>
                 </div>
               </div>
