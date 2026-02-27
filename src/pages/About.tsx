@@ -23,8 +23,8 @@ const About = () => {
                         <p>
                             Desenvolvido no âmbito do projeto europeu BeeConnected SUDOE, o Poll&Nature é
                             coordenado pelo Centre for Functional Ecology da Universidade de Coimbra, em
-                            estreita articulação com o Jardim Monte Formoso e a iniciativa São Flores, Coimbra e a
-                            polli.NET.
+                            estreita articulação com o Jardim Monte Formoso e a iniciativa São Flores, Coimbra,
+                            as Borboletas de Coimbra, e a polli.NET.
                         </p>
                     </div>
                 </div>
