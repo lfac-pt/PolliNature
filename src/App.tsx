@@ -65,10 +65,10 @@ const App = () => {
                   <h4 className="font-bold mb-6 text-lg">Links Rápidos</h4>
                   <ul className="space-y-4 text-slate-300">
                     <li><Link to="/" className="hover:text-primary transition-colors">Início</Link></li>
-                    <li><Link to="/explore" className="hover:text-primary transition-colors">Mapa Público</Link></li>
-                    <li><Link to="/map" className="hover:text-primary transition-colors">Participar / Começar Mapeamento</Link></li>
-                    <li><Link to="/what-to-do" className="hover:text-primary transition-colors">O que fazer?</Link></li>
                     <li><Link to="/about" className="hover:text-primary transition-colors">Sobre</Link></li>
+                    <li><Link to="/what-to-do" className="hover:text-primary transition-colors">O que fazer?</Link></li>
+                    <li><Link to="/explore" className="hover:text-primary transition-colors">Explorar (Mapa Público)</Link></li>
+                    <li><Link to="/map" className="hover:text-primary transition-colors">Participar / Começar Mapeamento</Link></li>
                     <li><Link to="/learn-more" className="hover:text-primary transition-colors">Para saber mais</Link></li>
                   </ul>
                 </div>
