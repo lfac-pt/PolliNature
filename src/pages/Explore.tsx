@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, GeoJSON, Popup, CircleMarker, useMapEvents, LayersControl } from 'react-leaflet';
 import * as turf from '@turf/turf';
 import { supabase } from '../lib/supabase';
-import { Leaf, MapPin, Ruler, User, ExternalLink } from 'lucide-react';
+import { Leaf, MapPin, Ruler, User, ExternalLink, X } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 import { SITE_COLORS, SITE_LABELS, ACTION_LABELS } from '../constants/site';
 
@@ -14,6 +14,7 @@ const Explore = () => {
     const { user } = useAuth();
     const [sites, setSites] = useState<any[]>([]);
     const [showMySitesOnly, setShowMySitesOnly] = useState(false);
+    const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchSites = async () => {
@@ -102,7 +103,7 @@ const Explore = () => {
                 </div>
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 z-0">
                 <MapContainer
                     center={[40.2033, -8.4103]}
                     zoom={13}
@@ -122,15 +123,40 @@ const Explore = () => {
                             />
                         </LayersControl.BaseLayer>
                     </LayersControl>
-                    <MapContent sites={filteredSites} user={user} />
+                    <MapContent sites={filteredSites} user={user} onImageClick={setFullscreenImage} />
                 </MapContainer>
             </div>
+
+            {/* Fullscreen Image Modal */}
+            {fullscreenImage && (
+                <div
+                    className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm transition-opacity"
+                    onClick={() => setFullscreenImage(null)}
+                >
+                    <button
+                        className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+                        onClick={() => setFullscreenImage(null)}
+                    >
+                        <X size={24} />
+                    </button>
+                    <div
+                        className="max-w-5xl max-h-[90vh] w-full h-full flex items-center justify-center"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <img
+                            src={fullscreenImage}
+                            alt="Local"
+                            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
 // Component to handle zoom events and rendering switch
-const MapContent = ({ sites, user }: { sites: any[], user: any }) => {
+const MapContent = ({ sites, user, onImageClick }: { sites: any[], user: any, onImageClick: (url: string) => void }) => {
     const [zoom, setZoom] = useState(13);
 
     useMapEvents({
@@ -156,7 +182,7 @@ const MapContent = ({ sites, user }: { sites: any[], user: any }) => {
                             radius={8}
                         >
                             <Popup>
-                                <SitePopupContent site={site} user={user} />
+                                <SitePopupContent site={site} user={user} onImageClick={onImageClick} />
                             </Popup>
                         </CircleMarker>
                     ) : (
@@ -171,7 +197,7 @@ const MapContent = ({ sites, user }: { sites: any[], user: any }) => {
                             }}
                         >
                             <Popup>
-                                <SitePopupContent site={site} user={user} />
+                                <SitePopupContent site={site} user={user} onImageClick={onImageClick} />
                             </Popup>
                         </GeoJSON>
                     )}
@@ -181,21 +207,27 @@ const MapContent = ({ sites, user }: { sites: any[], user: any }) => {
     );
 };
 
-const SitePopupContent = ({ site, user }: { site: any, user: any }) => {
+const SitePopupContent = ({ site, user, onImageClick }: { site: any, user: any, onImageClick: (url: string) => void }) => {
     const navigate = useNavigate();
 
     return (
         <div className="p-1 min-w-[200px]">
             {site.image_url && (
-                <div className="mb-3 rounded-lg overflow-hidden h-32 w-full relative bg-slate-100">
+                <div
+                    className="mb-3 rounded-lg overflow-hidden h-32 w-full relative bg-slate-100 cursor-pointer group"
+                    onClick={() => onImageClick(site.image_url)}
+                >
                     <img
                         src={site.image_url}
                         alt={site.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
                             (e.target as HTMLImageElement).style.display = 'none';
                         }}
                     />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 flex items-center justify-center transition-colors">
+                        <span className="opacity-0 group-hover:opacity-100 text-white drop-shadow-md font-medium text-xs bg-black/40 px-2 py-1 rounded">Ver Imagem</span>
+                    </div>
                 </div>
             )}
             <div className="flex items-center justify-between mb-2 pb-2 border-b">
