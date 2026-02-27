@@ -6,6 +6,8 @@ import { MapContainer, TileLayer, GeoJSON, Popup, LayersControl } from 'react-le
 import * as turf from '@turf/turf';
 import 'leaflet/dist/leaflet.css';
 import { SITE_COLORS, ACTION_LABELS } from '../constants/site';
+import SEO from '../components/SEO';
+
 const AdminPage = () => {
     const [sites, setSites] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -143,6 +145,7 @@ const AdminPage = () => {
 
     return (
         <div className="container mx-auto px-6 py-12">
+            <SEO title="Administração | Poll&Nature" description="Painel de validação de registos. Acesso restrito a administradores." canonical="https://pollinature.pt/admin" />
             <div className="flex justify-between items-center mb-10">
                 <div>
                     <h1 className="text-4xl mb-2">Painel de Validação</h1>

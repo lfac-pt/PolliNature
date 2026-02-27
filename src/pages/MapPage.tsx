@@ -5,6 +5,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { MoveRight, MapPin, Ruler, CheckCircle2, Info, Upload, X, UserPlus } from 'lucide-react';
 import { resizeImage } from '../utils/imageUtils';
 import { useAuth } from '../lib/AuthContext';
+import SEO from '../components/SEO';
 
 const MapPage = () => {
     const { id } = useParams();
@@ -392,8 +393,12 @@ const MapPage = () => {
         );
     }
 
+    const title = id ? 'Editar Local | Poll&Nature' : 'Participar / Começar Mapeamento | Poll&Nature';
+    const description = id ? 'Edite as informações do seu local no mapa.' : 'Mapeie a sua ação de restauro da natureza no concelho de Coimbra e contribua para uma cidade mais biodiversa e amiga dos polinizadores.';
+
     return (
         <div className="flex flex-col lg:flex-row h-[calc(100vh-64px)] overflow-hidden">
+            <SEO title={title} description={description} canonical="https://pollinature.pt/map" />
             {/* Sidebar Form */}
             <div className="w-full lg:w-[480px] bg-white border-r border-slate-100 p-8 overflow-y-auto z-10">
                 <div className="mb-8">

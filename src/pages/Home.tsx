@@ -1,11 +1,13 @@
 import React from 'react';
 import { Leaf, Map as MapIcon, ShieldCheck, BarChart3, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 import photo5 from '../assets/photos/photo5.webp';
 import photo6 from '../assets/photos/photo6.webp';
 const Home = () => {
     return (
         <div className="relative overflow-hidden bg-white">
+            <SEO />
             {/* Decorative Network Elements */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-10">
                 <svg width="100%" height="100%" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">

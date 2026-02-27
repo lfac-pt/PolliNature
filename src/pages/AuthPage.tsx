@@ -3,6 +3,8 @@ import { supabase } from '../lib/supabase';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Leaf, Loader2 } from 'lucide-react';
 
+import SEO from '../components/SEO';
+
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
@@ -43,8 +45,12 @@ const AuthPage = () => {
         }
     };
 
+    const title = isLogin ? 'Entrar | Poll&Nature' : 'Criar Conta | Poll&Nature';
+    const description = isLogin ? 'Entre para gerir as suas ações de restauro.' : 'Junte-se à comunidade Poll&Nature em Coimbra.';
+
     return (
         <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-6 py-12 bg-slate-50 relative overflow-hidden">
+            <SEO title={title} description={description} canonical="https://pollinature.pt/login" />
             {/* Background decoration */}
             <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-secondary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />

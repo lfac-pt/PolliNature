@@ -10,9 +10,12 @@ import photo13 from '../assets/photos/photo13.webp';
 import photo14 from '../assets/photos/photo14.webp';
 import photo15 from '../assets/photos/photo15.webp';
 
+import SEO from '../components/SEO';
+
 const WhatToDo = () => {
     return (
         <div className="bg-white min-h-screen">
+            <SEO title="O que fazer?" description="Pequenas ações, quando ligadas em rede, têm um grande impacto na biodiversidade urbana. Eis algumas medidas concretas que pode implementar no seu espaço." canonical="https://pollinature.pt/what-to-do" />
             <section className="py-20 bg-nature-50">
                 <div className="container mx-auto px-6 text-center">
                     <h1 className="text-5xl lg:text-6xl mb-6">O que <span className="text-primary">fazer?</span></h1>

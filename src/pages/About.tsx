@@ -1,4 +1,5 @@
 import { Users, Shield, Target } from 'lucide-react';
+import SEO from '../components/SEO';
 import photo1 from '../assets/photos/photo1.webp';
 import photo2 from '../assets/photos/photo2.webp';
 import photo3 from '../assets/photos/photo3.webp';
@@ -7,6 +8,7 @@ import photo4 from '../assets/photos/photo4.webp';
 const About = () => {
     return (
         <div className="bg-white min-h-screen">
+            <SEO title="Sobre" description="O Poll&Nature é a plataforma de Coimbra para agir em prol dos polinizadores e da biodiversidade urbana." canonical="https://pollinature.pt/about" />
             <section className="py-20 bg-nature-50">
                 <div className="container mx-auto px-6 text-center">
                     <h1 className="text-5xl lg:text-6xl mb-6">Sobre o <span className="text-primary">Poll&Nature</span></h1>

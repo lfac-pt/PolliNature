@@ -1,8 +1,9 @@
-
+import SEO from '../components/SEO';
 
 const LearnMore = () => {
     return (
         <div className="bg-white min-h-screen">
+            <SEO title="Para saber mais" description="Explore estes recursos para aprofundar os seus conhecimentos sobre polinizadores e projetos de ciência cidadã." canonical="https://pollinature.pt/learn-more" />
             <section className="py-20 bg-nature-50">
                 <div className="container mx-auto px-6 text-center">
                     <h1 className="text-5xl lg:text-6xl mb-6">Para <span className="text-primary">saber mais</span></h1>

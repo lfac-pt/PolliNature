@@ -7,9 +7,8 @@ import { Leaf, MapPin, Ruler, User, ExternalLink } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 import { SITE_COLORS, SITE_LABELS, ACTION_LABELS } from '../constants/site';
 
-
-
 import { useAuth } from '../lib/AuthContext';
+import SEO from '../components/SEO';
 
 const Explore = () => {
     const { user } = useAuth();
@@ -54,6 +53,7 @@ const Explore = () => {
 
     return (
         <div className="h-[calc(100vh-64px)] relative flex flex-col">
+            <SEO title="Mapa Público" description="Explore e descubra a rede urbana de espaços amigos dos polinizadores em Coimbra." canonical="https://pollinature.pt/explore" />
             {/* Stats Overlay */}
             <div className="absolute top-6 left-1/2 -translate-x-1/2 z-[1000] flex gap-4 w-full max-w-2xl px-6">
                 <StatsCard
