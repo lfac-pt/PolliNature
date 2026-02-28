@@ -77,7 +77,7 @@ const App = () => {
                 <div className="md:col-span-4">
                   <h4 className="font-bold mb-6 text-lg">Parceiros e Apoios</h4>
                   <div className="bg-white rounded-3xl p-6 shadow-xl flex flex-wrap items-center justify-center gap-5">
-                    <a href="mailto:flowerlab@uc.pt" target="_blank" rel="noopener noreferrer">
+                    <a href="https://ucpages.uc.pt/flowerlab/" target="_blank" rel="noopener noreferrer">
                       <img src={getImgPath("/logos/flower-lab.webp")} alt="FLOWer Lab" className="h-10 object-contain hover:scale-105 transition-transform" />
                     </a>
                     <a href="https://borboletasdecoimbra.pt/" target="_blank" rel="noopener noreferrer">
